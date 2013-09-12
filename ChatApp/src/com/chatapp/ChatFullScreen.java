@@ -29,9 +29,9 @@ public class ChatFullScreen extends Activity {
 		EditText editText = (EditText) findViewById(R.id.edit_message);
 		String message = editText.getText().toString();
 
-		TextView textView = (TextView) findViewById(R.id.textView1);
+		TextView textView = (TextView) getText(R.id.textView1);
 		textView.setText(message);
-
+		setContentView(textView);
 	}
 
 }

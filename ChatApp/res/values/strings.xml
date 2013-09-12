@@ -9,5 +9,6 @@
     <string name="button_send">Send</string>
     <string name="edit_message">Enter a message</string>
     <string name="message_view">messages</string>
+    <string name="button_click">messages</string>
 
 </resources>
