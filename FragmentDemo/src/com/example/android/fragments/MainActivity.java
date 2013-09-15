@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
 		ContactsFragment.OnHeadlineSelectedListener {
@@ -94,6 +96,9 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void sendMessage(View view) {
-		// TODO something
+		TextView textview = (TextView) findViewById(R.id.chatView);
+		EditText editText = (EditText) findViewById(R.id.edit_message);
+		String message = editText.getText().toString();
+		textview.setText(message);
 	}
 }

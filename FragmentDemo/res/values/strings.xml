@@ -22,4 +22,5 @@ limitations under the License.
     <string name="contact_list">Who is online?</string>
     <string name="button_send">Send</string>
     <string name="edit_message">Type Something</string>
+    <string name="temp_text">text goes here</string>
 </resources>
