@@ -21,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ArticleFragment extends Fragment {
+public class ChatFragment extends Fragment {
 	final static String ARG_POSITION = "position";
 	int mCurrentPosition = -1;
 
@@ -37,7 +37,7 @@ public class ArticleFragment extends Fragment {
 		}
 
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.article_view, container, false);
+		return inflater.inflate(R.layout.chat_view, container, false);
 	}
 
 	@Override

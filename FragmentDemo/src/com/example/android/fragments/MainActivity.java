@@ -21,13 +21,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 public class MainActivity extends FragmentActivity implements
-		HeadlinesFragment.OnHeadlineSelectedListener {
+		ContactsFragment.OnHeadlineSelectedListener {
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.news_articles);
+		setContentView(R.layout.contacts_view);
 
 		// Check whether the activity is using the layout version with
 		// the fragment_container FrameLayout. If so, we must add the first
@@ -42,7 +42,7 @@ public class MainActivity extends FragmentActivity implements
 			}
 
 			// Create an instance of ExampleFragment
-			HeadlinesFragment firstFragment = new HeadlinesFragment();
+			ContactsFragment firstFragment = new ContactsFragment();
 
 			// In case this activity was started with special instructions from
 			// an Intent,
@@ -60,7 +60,7 @@ public class MainActivity extends FragmentActivity implements
 		// HeadlinesFragment
 
 		// Capture the article fragment from the activity layout
-		ArticleFragment articleFrag = (ArticleFragment) getSupportFragmentManager()
+		ChatFragment articleFrag = (ChatFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.article_fragment);
 
 		if (articleFrag != null) {
@@ -74,9 +74,9 @@ public class MainActivity extends FragmentActivity implements
 			// must swap frags...
 
 			// Create fragment and give it an argument for the selected article
-			ArticleFragment newFragment = new ArticleFragment();
+			ChatFragment newFragment = new ChatFragment();
 			Bundle args = new Bundle();
-			args.putInt(ArticleFragment.ARG_POSITION, position);
+			args.putInt(ChatFragment.ARG_POSITION, position);
 			newFragment.setArguments(args);
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();

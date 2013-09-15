@@ -23,7 +23,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class HeadlinesFragment extends ListFragment {
+public class ContactsFragment extends ListFragment {
 	OnHeadlineSelectedListener mCallback;
 
 	// The container Activity must implement this interface so the frag can
@@ -45,7 +45,7 @@ public class HeadlinesFragment extends ListFragment {
 		// Create an array adapter for the list view, using the Ipsum headlines
 		// array
 		setListAdapter(new ArrayAdapter<String>(getActivity(), layout,
-				new String[] { "Article One", "Article Two" }));
+				new String[] { "Contact One", "Contact Two" }));
 	}
 
 	@Override
