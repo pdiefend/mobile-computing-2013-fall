@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.fragments;
+package com.android.chat.fragments;
 
 import android.app.Activity;
 import android.os.Build;
@@ -30,7 +30,7 @@ public class ContactsFragment extends ListFragment {
 	// deliver messages
 	public interface OnHeadlineSelectedListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onArticleSelected(int position);
+		public void onContactSelected(int position);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class ContactsFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
-		mCallback.onArticleSelected(position);
+		mCallback.onContactSelected(position);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);

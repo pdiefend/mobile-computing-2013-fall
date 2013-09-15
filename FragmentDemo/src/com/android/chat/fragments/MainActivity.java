@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.fragments;
+package com.android.chat.fragments;
 
+import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,9 +36,13 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contacts_view);
 
-		// Check whether the activity is using the layout version with
-		// the fragment_container FrameLayout. If so, we must add the first
-		// fragment
+		// gets the activity's default ActionBar
+		ActionBar actionBar = getActionBar();
+		actionBar.show();
+		// set the app icon as an action to go home
+		// we are home so we don't need it
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
 		if (findViewById(R.id.fragment_container) != null) {
 
 			// However, if we're being restored from a previous state,
@@ -57,7 +66,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	public void onArticleSelected(int position) {
+	public void onContactSelected(int position) {
 		// The user selected the headline of an article from the
 		// HeadlinesFragment
 
@@ -66,7 +75,7 @@ public class MainActivity extends FragmentActivity implements
 				.findFragmentById(R.id.article_fragment);
 
 		if (articleFrag != null) {
-			// If article frag is available, we're in two-pane layout...
+			// If contact frag is available, we're in two-pane layout...
 
 			// Call a method in the ArticleFragment to update its content
 			articleFrag.updateArticleView(position);
@@ -101,4 +110,26 @@ public class MainActivity extends FragmentActivity implements
 		String message = editText.getText().toString();
 		textview.setText(message);
 	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// use an inflater to populate the ActionBar with items
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.chat_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// same as using a normal menu
+		switch (item.getItemId()) {
+		case R.id.item_full_screen:
+			Intent intent = new Intent(this, FullScreenChatActivity.class);
+			startActivity(intent);
+			break;
+		// add other button options here
+		}
+		return true;
+	}
+
 }
