@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.widget.EditText;
 
 public class LogonDialogFragment extends DialogFragment {
 	/*
@@ -38,7 +40,12 @@ public class LogonDialogFragment extends DialogFragment {
 		builder.setPositiveButton(R.string.cont,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						// TODO
+						Dialog dialog2 = (Dialog) dialog;
+						EditText edit = (EditText) dialog2
+								.findViewById(R.id.username);
+						String user = edit.getText().toString();
+
+						Log.w("<============", user);
 					}
 				}).setTitle(R.string.logon_prompt);
 

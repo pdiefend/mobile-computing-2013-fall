@@ -45,7 +45,7 @@ public class ContactsFragment extends ListFragment {
 		// Create an array adapter for the list view, using the Ipsum headlines
 		// array
 		setListAdapter(new ArrayAdapter<String>(getActivity(), layout,
-				new String[] { "Contact One", "Contact Two" }));
+				MainActivity.getData().getContacts()));
 	}
 
 	@Override
@@ -79,8 +79,8 @@ public class ContactsFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
 		mCallback.onContactSelected(position);
-
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
+shj
 	}
 }

@@ -26,10 +26,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
 		ContactsFragment.OnHeadlineSelectedListener {
+
+	private static ChatData data = new ChatData(2);
+
+	public static ChatData getData() {
+		return data;
+	}
 
 	/** Called when the activity is first created. */
 	@Override
@@ -68,11 +73,12 @@ public class MainActivity extends FragmentActivity implements
 		}
 		DialogFragment newFragment = new LogonDialogFragment();
 		newFragment.show(getFragmentManager(), "logon");
+
+		data.addContact(0, "Contact 1", "Contact 1 message");
+		data.addContact(1, "Contact 2", "Contact 2 message");
 	}
 
 	public void onContactSelected(int position) {
-		// The user selected the headline of an article from the
-		// HeadlinesFragment
 
 		// Capture the article fragment from the activity layout
 		ChatFragment articleFrag = (ChatFragment) getSupportFragmentManager()
@@ -109,10 +115,12 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void sendMessage(View view) {
-		TextView textview = (TextView) findViewById(R.id.chatView);
+		// TextView textview = (TextView) findViewById(R.id.chatView);
 		EditText editText = (EditText) findViewById(R.id.edit_message);
 		String message = editText.getText().toString();
-		textview.setText(message);
+		// textview.setText(message);
+		data.modifyMessage(ChatFragment.ARG_POSITION, message);
+
 	}
 
 	@Override
@@ -127,6 +135,10 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// same as using a normal menu
 		switch (item.getItemId()) {
+		case R.id.item_settings:
+			DialogFragment newFragment = new LogonDialogFragment();
+			newFragment.show(getFragmentManager(), "logon");
+			break;
 		case R.id.item_full_screen:
 			Intent intent = new Intent(this, FullScreenChatActivity.class);
 			startActivity(intent);

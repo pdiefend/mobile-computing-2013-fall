@@ -31,5 +31,6 @@ limitations under the License.
     <string name="logon_prompt">Please log on</string>
     <string name="cont">Continue</string>
     <string name="username">Username</string>
+    <string name="ui_menu_user">Change User</string>
 
 </resources>

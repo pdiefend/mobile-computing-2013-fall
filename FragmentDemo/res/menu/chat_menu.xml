@@ -1,10 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-   
-    <item
+
+        <item
         android:id="@+id/item_full_screen"
         android:icon="@android:drawable/ic_menu_zoom"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/ui_menu_send">
     </item>
+    
+    <item
+        android:id="@+id/item_settings"
+        android:icon="@android:drawable/presence_online"
+        android:showAsAction="always|withText"
+        android:title="@string/ui_menu_user">
+    </item>
+
     
 </menu>
