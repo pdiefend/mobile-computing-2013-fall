@@ -26,9 +26,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.android.chat.fragments.ContactsFragment.OnContactSelectedListener;
 
 public class MainActivity extends FragmentActivity implements
-		ContactsFragment.OnHeadlineSelectedListener {
+		OnContactSelectedListener {
 
 	private static ChatData data = new ChatData(2);
 
@@ -79,15 +82,12 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void onContactSelected(int position) {
-
-		// Capture the article fragment from the activity layout
 		ChatFragment articleFrag = (ChatFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.article_fragment);
+				.findFragmentById(R.id.chat_fragment);
 
 		if (articleFrag != null) {
 			// If contact frag is available, we're in two-pane layout...
-
-			// Call a method in the ArticleFragment to update its content
+			// Call a method in the ChatFragment to update its content
 			articleFrag.updateArticleView(position);
 
 		} else {
@@ -115,11 +115,11 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void sendMessage(View view) {
-		// TextView textview = (TextView) findViewById(R.id.chatView);
+		TextView textview = (TextView) findViewById(R.id.chatView);
 		EditText editText = (EditText) findViewById(R.id.edit_message);
 		String message = editText.getText().toString();
-		// textview.setText(message);
-		data.modifyMessage(ChatFragment.ARG_POSITION, message);
+		textview.setText(message);
+		data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
 
 	}
 

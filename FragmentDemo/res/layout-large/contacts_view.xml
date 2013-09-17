@@ -22,13 +22,13 @@ limitations under the License.
     android:baselineAligned="false">
 
     <fragment android:name="com.android.chat.fragments.ContactsFragment"
-              android:id="@+id/headlines_fragment"
+              android:id="@+id/contacts_fragment"
               android:layout_weight="1"
               android:layout_width="0dp"
               android:layout_height="match_parent" />
 
     <fragment android:name="com.android.chat.fragments.ChatFragment"
-              android:id="@+id/article_fragment"
+              android:id="@+id/chat_fragment"
               android:layout_weight="2"
               android:layout_width="0dp"
               android:layout_height="match_parent" />
