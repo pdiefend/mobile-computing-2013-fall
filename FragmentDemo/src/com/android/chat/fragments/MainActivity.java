@@ -16,6 +16,7 @@
 package com.android.chat.fragments;
 
 import android.app.ActionBar;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -63,7 +64,10 @@ public class MainActivity extends FragmentActivity implements
 			// Add the fragment to the 'fragment_container' FrameLayout
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.fragment_container, firstFragment).commit();
+
 		}
+		DialogFragment newFragment = new LogonDialogFragment();
+		newFragment.show(getFragmentManager(), "logon");
 	}
 
 	public void onContactSelected(int position) {
