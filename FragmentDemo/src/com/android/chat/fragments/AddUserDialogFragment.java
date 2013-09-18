@@ -31,9 +31,7 @@ public class AddUserDialogFragment extends DialogFragment {
 
 						if (!user.equals("")) {
 							Log.w("Add User:", user);
-							MainActivity.getData().addContact(user,
-									"Enter Text here");
-							ContactsFragment.addItems(user);
+							ContactsFragment.addItems(getView(), user);
 						} else {
 							Log.w("Add User:", "aborted");
 						}

@@ -57,6 +57,10 @@ limitations under the License.
             android:name="com.android.chat.fragments.AddUserDialogFragment"
             android:label="@string/title_activity_add_user_dialog_fragment" >
         </activity>
+        <activity
+            android:name="com.android.chat.fragments.RemoveUserDialogFragment"
+            android:label="@string/title_activity_remove_user_dialog_fragment" >
+        </activity>
     </application>
 
 </manifest>

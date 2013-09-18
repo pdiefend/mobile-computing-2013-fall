@@ -7,6 +7,13 @@
         android:title="@string/add_user_prompt">
     </item>
     
+    <item
+        android:id="@+id/item_remove_contact"
+        android:icon="@android:drawable/ic_delete"
+        android:showAsAction="always"
+        android:title="@string/remove_user_prompt">
+    </item>
+    
         <item
         android:id="@+id/item_full_screen"
         android:icon="@android:drawable/ic_menu_zoom"

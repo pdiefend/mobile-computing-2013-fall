@@ -50,4 +50,15 @@ public class ChatData {
 		return contacts;
 	}
 
+	public void removeContact(String contact) {
+		int index = contacts.indexOf(contact);
+		contacts.remove(index);
+		messages.remove(index);
+	}
+
+	public void removeContact(int index) {
+		contacts.remove(index);
+		messages.remove(index);
+	}
+
 }

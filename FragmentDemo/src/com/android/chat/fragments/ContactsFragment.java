@@ -50,9 +50,17 @@ public class ContactsFragment extends ListFragment {
 	}
 
 	// Method for Dynamic insertion into contacts
-	public static void addItems(String contact) {
+	public static void addItems(View v, String contact) {
 		contacts.add(contact);
 		adapter.notifyDataSetChanged();
+		MainActivity.getData().addContact(contact, "Enter Text here");
+	}
+
+	// Method for Dynamic insertion into contacts
+	public static void removeItems(View v, int which) {
+		contacts.remove(which);
+		adapter.notifyDataSetChanged();
+		MainActivity.getData().removeContact(which);
 	}
 
 	// Method for Dynamic insertion into contacts

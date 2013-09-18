@@ -46,9 +46,6 @@ public class MainActivity extends FragmentActivity implements
 					.add(R.id.fragment_container, firstFragment).commit();
 		}
 
-		// DialogFragment newFragment = new AddUserDialogFragment();
-		// newFragment.show(getFragmentManager(), "addUser");
-
 		DialogFragment newFragment = new LogonDialogFragment();
 		newFragment.show(getFragmentManager(), "logon");
 	}
@@ -92,11 +89,13 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void sendMessage(View view) {
-		TextView textview = (TextView) findViewById(R.id.chatView);
-		EditText editText = (EditText) findViewById(R.id.edit_message);
-		String message = editText.getText().toString();
-		textview.setText(message);
-		data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
+		if (!ContactsFragment.contacts.isEmpty()) {
+			TextView textview = (TextView) findViewById(R.id.chatView);
+			EditText editText = (EditText) findViewById(R.id.edit_message);
+			String message = editText.getText().toString();
+			textview.setText(message);
+			data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
+		}
 	}
 
 	@Override
@@ -122,6 +121,10 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.item_add_contact:
 			DialogFragment addFragment = new AddUserDialogFragment();
 			addFragment.show(getFragmentManager(), "addUser");
+			break;
+		case R.id.item_remove_contact:
+			DialogFragment removeFragment = new RemoveUserDialogFragment();
+			removeFragment.show(getFragmentManager(), "removeUser");
 			break;
 		// add other button options here
 		}

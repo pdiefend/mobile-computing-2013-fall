@@ -34,5 +34,7 @@ limitations under the License.
     <string name="ui_menu_user">Change User</string>
     <string name="title_activity_add_user_dialog_fragment">AddUserDialogFragment</string>
     <string name="add_user_prompt">Add User</string>
+    <string name="title_activity_remove_user_dialog_fragment">RemoveUserDialogFragment</string>
+    <string name="remove_user_prompt">Remove User</string>
 
 </resources>
