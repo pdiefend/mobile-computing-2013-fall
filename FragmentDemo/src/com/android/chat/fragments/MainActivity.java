@@ -46,11 +46,11 @@ public class MainActivity extends FragmentActivity implements
 					.add(R.id.fragment_container, firstFragment).commit();
 		}
 
-		DialogFragment newFragment = new AddUserDialogFragment();
-		newFragment.show(getFragmentManager(), "addUser");
+		// DialogFragment newFragment = new AddUserDialogFragment();
+		// newFragment.show(getFragmentManager(), "addUser");
 
-		// DialogFragment newFragment = new LogonDialogFragment();
-		// newFragment.show(getFragmentManager(), "logon");
+		DialogFragment newFragment = new LogonDialogFragment();
+		newFragment.show(getFragmentManager(), "logon");
 	}
 
 	public void onContactSelected(int position) {
@@ -111,13 +111,17 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// same as using a normal menu
 		switch (item.getItemId()) {
-		case R.id.item_settings:
-			DialogFragment newFragment = new LogonDialogFragment();
-			newFragment.show(getFragmentManager(), "logon");
-			break;
 		case R.id.item_full_screen:
 			Intent intent = new Intent(this, FullScreenChatActivity.class);
 			startActivity(intent);
+			break;
+		case R.id.item_change_username:
+			DialogFragment logonFragment = new LogonDialogFragment();
+			logonFragment.show(getFragmentManager(), "logon");
+			break;
+		case R.id.item_add_contact:
+			DialogFragment addFragment = new AddUserDialogFragment();
+			addFragment.show(getFragmentManager(), "addUser");
 			break;
 		// add other button options here
 		}

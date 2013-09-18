@@ -2,7 +2,6 @@ package com.android.chat.fragments;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +26,7 @@ public class FullScreenChatActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.chat_menu, menu);
+		getMenuInflater().inflate(R.menu.fs_chat_menu, menu);
 		return true;
 	}
 
@@ -41,17 +40,7 @@ public class FullScreenChatActivity extends Activity {
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// same as using a normal menu
-		switch (item.getItemId()) {
-		case R.id.item_settings:
-			DialogFragment newFragment = new LogonDialogFragment();
-			newFragment.show(getFragmentManager(), "logon");
-			break;
-		case R.id.item_full_screen:
-			super.onBackPressed();
-			break;
-		// add other button options here
-		}
+		super.onBackPressed();
 		return true;
 	}
 

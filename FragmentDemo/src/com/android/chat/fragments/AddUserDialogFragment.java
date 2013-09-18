@@ -29,11 +29,14 @@ public class AddUserDialogFragment extends DialogFragment {
 								.findViewById(R.id.addUsername);
 						String user = edit.getText().toString();
 
-						Log.w("Add User:", user);
-						MainActivity.getData().addContact(user,
-								"Enter Text here");
-
-						ContactsFragment.addItems(user);
+						if (!user.equals("")) {
+							Log.w("Add User:", user);
+							MainActivity.getData().addContact(user,
+									"Enter Text here");
+							ContactsFragment.addItems(user);
+						} else {
+							Log.w("Add User:", "aborted");
+						}
 					}
 				}).setTitle(R.string.add_user_prompt);
 
