@@ -13,7 +13,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 -->
 
 <resources>
@@ -33,5 +32,7 @@ limitations under the License.
     <string name="cont">Continue</string>
     <string name="username">Username</string>
     <string name="ui_menu_user">Change User</string>
+    <string name="title_activity_add_user_dialog_fragment">AddUserDialogFragment</string>
+    <string name="add_user_prompt">Add User</string>
 
 </resources>

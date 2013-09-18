@@ -28,41 +28,29 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contacts_view);
 
-		// gets the activity's default ActionBar
 		ActionBar actionBar = getActionBar();
 		actionBar.show();
-		// set the app icon as an action to go home
-		// we are home so we don't need it
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(false);
 
-		if (findViewById(R.id.fragment_container) != null) {
-
-			// However, if we're being restored from a previous state,
-			// then we don't need to do anything and should return or else
-			// we could end up with overlapping fragments.
-			if (savedInstanceState != null) {
-				return;
-			}
-
-			// Create an instance of ExampleFragment
-			ContactsFragment firstFragment = new ContactsFragment();
-
-			// In case this activity was started with special instructions from
-			// an Intent,
-			// pass the Intent's extras to the fragment as arguments
-			firstFragment.setArguments(getIntent().getExtras());
-
-			// Add the fragment to the 'fragment_container' FrameLayout
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragment_container, firstFragment).commit();
-
-		}
 		data = new ChatData(2);
 		data.addContact(0, "Contact 1", "Contact 1 message");
 		data.addContact(1, "Contact 2", "Contact 2 message");
 
-		DialogFragment newFragment = new LogonDialogFragment();
-		newFragment.show(getFragmentManager(), "logon");
+		if (findViewById(R.id.fragment_container) != null) {
+			if (savedInstanceState != null) {
+				return;
+			}
+			ContactsFragment firstFragment = new ContactsFragment();
+			firstFragment.setArguments(getIntent().getExtras());
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.fragment_container, firstFragment).commit();
+		}
+
+		DialogFragment newFragment = new AddUserDialogFragment();
+		newFragment.show(getFragmentManager(), "addUser");
+
+		// DialogFragment newFragment = new LogonDialogFragment();
+		// newFragment.show(getFragmentManager(), "logon");
 	}
 
 	public void onContactSelected(int position) {

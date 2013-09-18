@@ -38,8 +38,8 @@ limitations under the License.
         </activity>
         <activity
             android:name="com.android.chat.fragments.FullScreenChatActivity"
-            android:label="@string/title_activity_full_screen_chat" 
-            android:windowSoftInputMode="stateHidden">
+            android:label="@string/title_activity_full_screen_chat"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="com.android.chat.fragments.LogonActivity"
@@ -52,6 +52,10 @@ limitations under the License.
         <activity
             android:name="com.android.chat.fragments.LogonDialogFragment"
             android:label="@string/title_activity_logon" >
+        </activity>
+        <activity
+            android:name="com.android.chat.fragments.AddUserDialogFragment"
+            android:label="@string/title_activity_add_user_dialog_fragment" >
         </activity>
     </application>
 

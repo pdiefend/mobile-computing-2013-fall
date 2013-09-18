@@ -15,8 +15,9 @@
  */
 package com.android.chat.fragments;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -26,6 +27,8 @@ import android.widget.ListView;
 public class ContactsFragment extends ListFragment {
 	OnHeadlineSelectedListener mCallback;
 	private static int selectedIndex = 0;
+	static ArrayList<String> contacts = new ArrayList<String>();
+	static ArrayAdapter<String> adapter;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -35,20 +38,65 @@ public class ContactsFragment extends ListFragment {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle bundle) {
+		super.onCreate(bundle);
+		int layout = android.R.layout.simple_list_item_activated_1;
 
-		// We need to use a different list item layout for devices older than
-		// Honeycomb
-		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-				: android.R.layout.simple_list_item_1;
+		contacts.add("C1");
+		contacts.add("C2");
 
-		// Create an array adapter for the list view, using the Ipsum headlines
-		// array
-		setListAdapter(new ArrayAdapter<String>(getActivity(), layout,
-				new String[] { "Contact One", "Contact Two" }));
+		adapter = new ArrayAdapter<String>(getActivity(), layout, contacts);
+		setListAdapter(adapter);
 	}
 
+	// Method for Dynamic insertion into contacts
+	public static void addItems(String contact) {
+		contacts.add(contact);
+		adapter.notifyDataSetChanged();
+	}
+
+	// Method for Dynamic insertion into contacts
+	// public void addItems(View v, String[] cons) {
+	// for (int i = 0; i < cons.length; i++) {
+	// contacts.add(cons[i]);
+	// }
+	// adapter.notifyDataSetChanged();
+	// }
+
+	/*
+	 * @Override public View onCreateView(LayoutInflater inflater, ViewGroup
+	 * container, Bundle savedInstanceState) { ArrayAdapter<String> adapter =
+	 * new ArrayAdapter<String>( inflater.getContext(),
+	 * android.R.layout.simple_list_item_1, contacts);
+	 * 
+	 * // Setting the list adapter for the ListFragment setListAdapter(adapter);
+	 * return super.onCreateView(inflater, container, savedInstanceState); }
+	 */
+
+	// Don't touch this
+	/*
+	 * @Override public void onCreate(Bundle savedInstanceState) {
+	 * super.onCreate(savedInstanceState);
+	 * 
+	 * // We need to use a different list item layout for devices older than //
+	 * Honeycomb int layout = Build.VERSION.SDK_INT >=
+	 * Build.VERSION_CODES.HONEYCOMB ?
+	 * android.R.layout.simple_list_item_activated_1 :
+	 * android.R.layout.simple_list_item_1;
+	 * 
+	 * // TODO This is where it is breaking: // Original setListAdapter(new
+	 * ArrayAdapter<String>(getActivity(), layout, new String[] { "C1", "C2"
+	 * }));
+	 * 
+	 * // ChatData tmp = new ChatData(MainActivity.getData()); // Copy //
+	 * constructor does not work
+	 * 
+	 * // This does not work either // String[] tmp =
+	 * MainActivity.getData().getContacts(); // String[] contacts = new
+	 * String[tmp.length]; // for (int i = 0; i < tmp.length; i++) { //
+	 * contacts[i] = new String(tmp[i]); // } // // setListAdapter(new
+	 * ArrayAdapter<String>(getActivity(), layout, // contacts)); }
+	 */
 	@Override
 	public void onStart() {
 		super.onStart();

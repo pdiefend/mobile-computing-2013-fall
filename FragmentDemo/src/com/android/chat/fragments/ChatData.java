@@ -18,9 +18,20 @@ public class ChatData {
 		messages = new ArrayList<String>(n);
 	}
 
+	public ChatData(ChatData tmp) {
+		this.contacts = new ArrayList<String>(contacts);
+		this.messages = new ArrayList<String>(messages);
+
+	}
+
 	public void addContact(int position, String contact, String message) {
 		contacts.add(position, contact);
 		messages.add(position, message);
+	}
+
+	public void addContact(String contact, String message) {
+		contacts.add(contact);
+		messages.add(message);
 	}
 
 	public void modifyMessage(int position, String message) {
@@ -33,6 +44,10 @@ public class ChatData {
 
 	public String[] getContacts() {
 		return (String[]) contacts.toArray();
+	}
+
+	public ArrayList<String> getContacts(boolean i) {
+		return contacts;
 	}
 
 }
