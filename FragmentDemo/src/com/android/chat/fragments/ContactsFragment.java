@@ -25,6 +25,7 @@ import android.widget.ListView;
 
 public class ContactsFragment extends ListFragment {
 	OnHeadlineSelectedListener mCallback;
+	private static int selectedIndex = 0;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -79,8 +80,16 @@ public class ContactsFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
 		mCallback.onContactSelected(position);
-
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
+		selectedIndex = position;
+	}
+
+	public static int getSelectedIndex() {
+		return selectedIndex;
+	}
+
+	public static void setSelectedIndex(int selectedIndex) {
+		ContactsFragment.selectedIndex = selectedIndex;
 	}
 }

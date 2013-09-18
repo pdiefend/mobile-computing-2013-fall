@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.android.chat.fragments;
 
 import android.app.ActionBar;
@@ -30,6 +15,12 @@ import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
 		ContactsFragment.OnHeadlineSelectedListener {
+
+	private static ChatData data;
+
+	public static ChatData getData() {
+		return data;
+	}
 
 	/** Called when the activity is first created. */
 	@Override
@@ -66,6 +57,10 @@ public class MainActivity extends FragmentActivity implements
 					.add(R.id.fragment_container, firstFragment).commit();
 
 		}
+		data = new ChatData(2);
+		data.addContact(0, "Contact 1", "Contact 1 message");
+		data.addContact(1, "Contact 2", "Contact 2 message");
+
 		DialogFragment newFragment = new LogonDialogFragment();
 		newFragment.show(getFragmentManager(), "logon");
 	}
@@ -113,6 +108,7 @@ public class MainActivity extends FragmentActivity implements
 		EditText editText = (EditText) findViewById(R.id.edit_message);
 		String message = editText.getText().toString();
 		textview.setText(message);
+		data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
 	}
 
 	@Override

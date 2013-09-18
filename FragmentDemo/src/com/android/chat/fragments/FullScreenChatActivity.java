@@ -19,6 +19,10 @@ public class FullScreenChatActivity extends Activity {
 		ActionBar actionBar = getActionBar();
 		actionBar.show();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		TextView textview = (TextView) findViewById(R.id.chatView);
+		textview.setText(MainActivity.getData().getMessage(
+				ContactsFragment.getSelectedIndex()));
+
 	}
 
 	@Override
@@ -32,6 +36,8 @@ public class FullScreenChatActivity extends Activity {
 		EditText editText = (EditText) findViewById(R.id.edit_message);
 		String message = editText.getText().toString();
 		textview.setText(message);
+		MainActivity.getData().modifyMessage(
+				ContactsFragment.getSelectedIndex(), message);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {

@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class ChatFragment extends Fragment {
 	final static String ARG_POSITION = "position";
@@ -62,12 +63,8 @@ public class ChatFragment extends Fragment {
 	}
 
 	public void updateArticleView(int position) {
-		/*
-		 * TextView article = (TextView)
-		 * getActivity().findViewById(R.id.article); if (position == 0) {
-		 * article.setText(R.string.article_1); } else {
-		 * article.setText(R.string.article_2); }
-		 */
+		TextView chat = (TextView) getActivity().findViewById(R.id.chatView);
+		chat.setText(MainActivity.getData().getMessage(position));
 		mCurrentPosition = position;
 	}
 
