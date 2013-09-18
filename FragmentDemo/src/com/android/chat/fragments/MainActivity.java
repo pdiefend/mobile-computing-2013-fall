@@ -95,6 +95,7 @@ public class MainActivity extends FragmentActivity implements
 			String message = editText.getText().toString();
 			textview.setText(message);
 			data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
+			editText.setText("");
 		}
 	}
 
