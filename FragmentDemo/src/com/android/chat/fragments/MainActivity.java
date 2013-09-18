@@ -28,16 +28,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.chat.fragments.ContactsFragment.OnContactSelectedListener;
-
 public class MainActivity extends FragmentActivity implements
-		OnContactSelectedListener {
-
-	private static ChatData data = new ChatData(2);
-
-	public static ChatData getData() {
-		return data;
-	}
+		ContactsFragment.OnHeadlineSelectedListener {
 
 	/** Called when the activity is first created. */
 	@Override
@@ -76,18 +68,20 @@ public class MainActivity extends FragmentActivity implements
 		}
 		DialogFragment newFragment = new LogonDialogFragment();
 		newFragment.show(getFragmentManager(), "logon");
-
-		data.addContact(0, "Contact 1", "Contact 1 message");
-		data.addContact(1, "Contact 2", "Contact 2 message");
 	}
 
 	public void onContactSelected(int position) {
+		// The user selected the headline of an article from the
+		// HeadlinesFragment
+
+		// Capture the article fragment from the activity layout
 		ChatFragment articleFrag = (ChatFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.chat_fragment);
+				.findFragmentById(R.id.article_fragment);
 
 		if (articleFrag != null) {
 			// If contact frag is available, we're in two-pane layout...
-			// Call a method in the ChatFragment to update its content
+
+			// Call a method in the ArticleFragment to update its content
 			articleFrag.updateArticleView(position);
 
 		} else {
@@ -119,8 +113,6 @@ public class MainActivity extends FragmentActivity implements
 		EditText editText = (EditText) findViewById(R.id.edit_message);
 		String message = editText.getText().toString();
 		textview.setText(message);
-		data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
-
 	}
 
 	@Override

@@ -24,13 +24,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ContactsFragment extends ListFragment {
-	OnContactSelectedListener mCallback;
-	private static int selectedIndex = -0;
+	OnHeadlineSelectedListener mCallback;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
-	public interface OnContactSelectedListener {
-		/** Called by ContactsFragment when a list item is selected */
+	public interface OnHeadlineSelectedListener {
+		/** Called by HeadlinesFragment when a list item is selected */
 		public void onContactSelected(int position);
 	}
 
@@ -43,18 +42,21 @@ public class ContactsFragment extends ListFragment {
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
 
+		// Create an array adapter for the list view, using the Ipsum headlines
+		// array
 		setListAdapter(new ArrayAdapter<String>(getActivity(), layout,
-				MainActivity.getData().getContacts()));
+				new String[] { "Contact One", "Contact Two" }));
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
+
 		// When in two-pane layout, set the listview to highlight the selected
 		// list item
 		// (We do this during onStart because at the point the listview is
 		// available.)
-		if (getFragmentManager().findFragmentById(R.id.chat_fragment) != null) {
+		if (getFragmentManager().findFragmentById(R.id.article_fragment) != null) {
 			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
 	}
@@ -66,10 +68,10 @@ public class ContactsFragment extends ListFragment {
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			mCallback = (OnContactSelectedListener) activity;
+			mCallback = (OnHeadlineSelectedListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnContactsSelectedListener");
+					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
 
@@ -77,16 +79,8 @@ public class ContactsFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
 		mCallback.onContactSelected(position);
+
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
-		selectedIndex = position;
-	}
-
-	public static int getSelectedIndex() {
-		return selectedIndex;
-	}
-
-	public static void setSelectedIndex(int p_selectedIndex) {
-		selectedIndex = p_selectedIndex;
 	}
 }

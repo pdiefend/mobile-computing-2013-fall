@@ -10,6 +10,22 @@ import android.view.LayoutInflater;
 import android.widget.EditText;
 
 public class LogonDialogFragment extends DialogFragment {
+	/*
+	 * @Override protected void onCreate(Bundle savedInstanceState) {
+	 * super.onCreate(savedInstanceState);
+	 * setContentView(R.layout.activity_logon); }
+	 * 
+	 * @Override public boolean onCreateOptionsMenu(Menu menu) { // Inflate the
+	 * menu; this adds items to the action bar if it is present.
+	 * getMenuInflater().inflate(R.menu.logon, menu); return true; }
+	 */
+
+	// @Override
+	// public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	// Bundle savedInstanceState) {
+	// // Inflate the layout to use as dialog or embedded fragment
+	// return inflater.inflate(R.layout.activity_logon, container, false);
+	// }
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
