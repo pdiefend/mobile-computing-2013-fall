@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class MainActivity extends FragmentActivity implements
 		ContactsFragment.OnHeadlineSelectedListener {
 
+	public final static int PORT = 3141;
 	private static ChatData data;
 
 	public static ChatData getData() {
