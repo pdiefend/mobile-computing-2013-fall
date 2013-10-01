@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,16 +27,13 @@ public class MainActivity extends FragmentActivity implements
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.w("On create:", "called");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contacts_view);
 
 		ActionBar actionBar = getActionBar();
 		actionBar.show();
 		actionBar.setDisplayHomeAsUpEnabled(false);
-
-		data = new ChatData(2);
-		data.addContact(0, "Contact 1", "Contact 1 message");
-		data.addContact(1, "Contact 2", "Contact 2 message");
 
 		if (findViewById(R.id.fragment_container) != null) {
 			if (savedInstanceState != null) {
@@ -46,9 +44,38 @@ public class MainActivity extends FragmentActivity implements
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.fragment_container, firstFragment).commit();
 		}
+		if (savedInstanceState == null) {
+			data = new ChatData(2);
+			data.addContact(0, "Contact 1", "Contact 1 message");
+			data.addContact(1, "Contact 2", "Contact 2 message");
 
-		DialogFragment newFragment = new LogonDialogFragment();
-		newFragment.show(getFragmentManager(), "logon");
+			DialogFragment newFragment = new LogonDialogFragment();
+			newFragment.show(getFragmentManager(), "logon");
+		}
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.w("On Stop:", "called");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.w("On Destroy:", "called");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.w("On Pause:", "called");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.w("On Resume:", "called");
 	}
 
 	public void onContactSelected(int position) {
