@@ -5,7 +5,6 @@ package com.android.chat.fragments;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import android.content.Context;
@@ -22,6 +21,7 @@ import android.util.Log;
 @SuppressWarnings("deprecation")
 public class BroadcastThread extends Thread {
 	Context mContext;
+	private String onlineStatus = "Not available";
 
 	public BroadcastThread(Context c) {
 		mContext = c;
@@ -33,8 +33,8 @@ public class BroadcastThread extends Thread {
 		try {
 			while (true) {
 				Log.i("Thread", "Ping");
-				this.sendPing();
-				Thread.sleep(1000);
+				this.sendOnlineStatus();
+				Thread.sleep(10000);
 			}
 		} catch (InterruptedException ex) {
 			Log.e("Thread", "Exception caught");
@@ -60,20 +60,34 @@ public class BroadcastThread extends Thread {
 		return InetAddress.getByAddress(quads);
 	}
 
-	public void sendPing() {
-		DatagramSocket socket;
-		try {
-			socket = new DatagramSocket(3141);
-			// Log.i("Thread", "here");
-			socket.setBroadcast(true);
-			DatagramPacket packet = new DatagramPacket("PING".getBytes(),
-					"PING".length(), getBroadcastAddress(), 3141);
-			socket.send(packet);
-			socket.close();
+	public String getIpAddress() throws IOException {
+		WifiManager wifi = (WifiManager) mContext
+				.getSystemService(Context.WIFI_SERVICE);
 
+		WifiInfo wifiInfo = wifi.getConnectionInfo();
+		int ip = wifiInfo.getIpAddress();
+		return Formatter.formatIpAddress(ip);
+	}
+
+	public void sendOnlineStatus() {
+		try {
+			// Log.i("Thread", "here");
+			setOnlineStatus(getIpAddress() + " " + MainActivity.username);
+			DatagramPacket packet = new DatagramPacket(onlineStatus.getBytes(),
+					onlineStatus.length(), getBroadcastAddress(),
+					MainActivity.PORT);
+			MessageService.broadcastSocket.send(packet);
 		} catch (IOException e) {
 			Log.e("Thread", "Exception Occured", e);
 		}
+	}
+
+	public String getOnlineStatus() {
+		return onlineStatus;
+	}
+
+	public void setOnlineStatus(String onlineStatus) {
+		this.onlineStatus = onlineStatus;
 	}
 
 }

@@ -28,6 +28,7 @@ public class LogonDialogFragment extends DialogFragment {
 						EditText edit = (EditText) dialog2
 								.findViewById(R.id.username);
 						String user = edit.getText().toString();
+						MainActivity.username = user;
 
 						Log.w("Change User:", user);
 					}

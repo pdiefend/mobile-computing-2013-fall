@@ -26,6 +26,8 @@ public class MainActivity extends FragmentActivity implements
 	// =======================================
 	boolean mBound = false;
 	MessageService mMsgService;
+	public static String username = "New User";
+	public static final int PORT = 3141;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -33,6 +35,7 @@ public class MainActivity extends FragmentActivity implements
 		public void onServiceDisconnected(ComponentName name) {
 			Log.i("ServiceBounding:", "ServiceDisconnect");
 			// mMsgService.online = false; Not working
+			MessageService.broadcastSocket.close();
 			mBound = false;
 			mMsgService = null;
 		}
@@ -45,17 +48,17 @@ public class MainActivity extends FragmentActivity implements
 			mMsgService = mLocalBinder.getService();
 			mBound = true;
 
-			// Initiate broadcasting
 			if (mBound) {
+				// Initiate broadcasting
 				mMsgService.broadcastOnline();
-				Log.i("Service Bounding...", "Finished");
+
+				// Initiate broadcast receiver listening to other users
+				mMsgService.broadcastListener();
 			} else
 				Log.i("checkBound", "Failed");
 		}
 	};
 	// =======================================
-
-	public final static int PORT = 3141;
 	private static ChatData data;
 
 	public static ChatData getData() {
@@ -124,7 +127,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Log.w("On Start:", "called!!!!!!!");
+		Log.w("On Start:", "called");
 		// Bind the service with the activity
 		Intent mIntent = new Intent(this, MessageService.class);
 		bindService(mIntent, mConnection, Context.BIND_AUTO_CREATE);
@@ -242,5 +245,4 @@ public class MainActivity extends FragmentActivity implements
 		}
 		return true;
 	}
-
 }

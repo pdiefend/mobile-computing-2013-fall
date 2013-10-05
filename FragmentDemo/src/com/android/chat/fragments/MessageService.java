@@ -1,6 +1,8 @@
 package com.android.chat.fragments;
 
+import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 import android.app.Service;
 import android.content.Intent;
@@ -12,13 +14,14 @@ public class MessageService extends Service {
 
 	// Instance field
 	public boolean online;
-	BroadcastThread broadcastStatus = new BroadcastThread(this);
 	// IBinder to connect the activity
 	private final IBinder mBinder = new LocalBinder();
 
+	public static DatagramSocket broadcastSocket;
+
 	// Constructor
-	public MessageService() {
-		// TODO Auto-generated constructor stub
+	public MessageService() throws SocketException {
+		broadcastSocket = new DatagramSocket(MainActivity.PORT);
 	}
 
 	public class LocalBinder extends Binder {
@@ -29,7 +32,13 @@ public class MessageService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
+		try {
+			broadcastSocket = new DatagramSocket(MainActivity.PORT);
+			broadcastSocket.setBroadcast(true);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return mBinder;
 	}
 
@@ -39,8 +48,13 @@ public class MessageService extends Service {
 	}
 
 	public void broadcastOnline() {
-		broadcastStatus.start();
-		Log.i("Activity", "Created");
+		(new BroadcastThread(this)).start();
+		Log.i("broadcastOnline", "Created");
+	}
+
+	public void broadcastListener() {
+		(new BroadcastRcvThread()).start();
+		Log.i("broadcastListener", "Created");
 	}
 
 	public void sendMessage(InetAddress sdAdd, String message) {
