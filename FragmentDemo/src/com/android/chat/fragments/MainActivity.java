@@ -2,8 +2,12 @@ package com.android.chat.fragments;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -14,8 +18,42 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.chat.fragments.MessageService.LocalBinder;
+
 public class MainActivity extends FragmentActivity implements
 		ContactsFragment.OnHeadlineSelectedListener {
+
+	// =======================================
+	boolean mBound = false;
+	MessageService mMsgService;
+
+	private ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			Log.i("ServiceBounding:", "ServiceDisconnect");
+			// mMsgService.online = false; Not working
+			mBound = false;
+			mMsgService = null;
+		}
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			Log.i("ServiceBounding:", "ServiceConnect");
+			// mMsgService.online = true; Not working
+			LocalBinder mLocalBinder = (LocalBinder) service;
+			mMsgService = mLocalBinder.getService();
+			mBound = true;
+
+			// Initiate broadcasting
+			if (mBound) {
+				mMsgService.broadcastOnline();
+				Log.i("Service Bounding...", "Finished");
+			} else
+				Log.i("checkBound", "Failed");
+		}
+	};
+	// =======================================
 
 	public final static int PORT = 3141;
 	private static ChatData data;
@@ -31,6 +69,17 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contacts_view);
 
+		// ===================================
+		// Starts the message service
+		/*
+		 * Intent msgServiceInit = new Intent(this, MessageService.class);
+		 * msgServiceInit.putExtra("PORT", PORT); startService(msgServiceInit);
+		 */
+		// Bind the message service
+
+		// Starts the broadcasting service
+
+		// ===================================
 		ActionBar actionBar = getActionBar();
 		actionBar.show();
 		actionBar.setDisplayHomeAsUpEnabled(false);
@@ -55,10 +104,34 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onStop() {
+	protected void onStop() {
 		super.onStop();
 		Log.w("On Stop:", "called");
+		// ========================================
+		// unbind the message service onStop
+		if (mBound) {
+			Log.i("checkBound", "mBound is True at onStop");
+			unbindService(mConnection);
+			mBound = false;
+		} else
+			Log.i("checkBound", "mBound is False at onStop");
+		// ========================================
 	}
+
+	// ==================================================
+	// Initiate the message service onStart
+	// Bind the service with the main Activity
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.w("On Start:", "called!!!!!!!");
+		// Bind the service with the activity
+		Intent mIntent = new Intent(this, MessageService.class);
+		bindService(mIntent, mConnection, Context.BIND_AUTO_CREATE);
+
+	}
+
+	// ====================================================
 
 	@Override
 	public void onDestroy() {
@@ -124,6 +197,16 @@ public class MainActivity extends FragmentActivity implements
 			textview.setText(message);
 			data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
 			editText.setText("");
+
+			/*
+			 * //================================================================
+			 * ===================================== // Sends out the message
+			 * Intent messageInfo = new Intent(this, MessageService.class);
+			 * messageInfo.putExtra("recieverIP", recieverIP);
+			 * messageInfo.putExtra("message", message);
+			 * startService(messageInfo); //====================================
+			 * =================================================================
+			 */
 		}
 	}
 
