@@ -17,6 +17,14 @@ public class MessageService extends Service {
 	// IBinder to connect the activity
 	private final IBinder mBinder = new LocalBinder();
 
+	// Broadcast and broadcast receiver threads
+	BroadcastThread broadcast = new BroadcastThread(this);
+	BroadcastRcvThread broadcastRcv = new BroadcastRcvThread(this);
+
+	/*
+	 * Declares the socket for broadcast. Used by BroadcastThread class and
+	 * BroadcastRcvThread class.
+	 */
 	public static DatagramSocket broadcastSocket;
 
 	// Constructor
@@ -48,12 +56,12 @@ public class MessageService extends Service {
 	}
 
 	public void broadcastOnline() {
-		(new BroadcastThread(this)).start();
+		broadcast.start();
 		Log.i("broadcastOnline", "Created");
 	}
 
 	public void broadcastListener() {
-		(new BroadcastRcvThread()).start();
+		broadcastRcv.start();
 		Log.i("broadcastListener", "Created");
 	}
 

@@ -2,9 +2,11 @@ package com.android.chat.fragments;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.chat.fragments.MessageService.LocalBinder;
+import com.android.chat.fragments.R.id;
 
 public class MainActivity extends FragmentActivity implements
 		ContactsFragment.OnHeadlineSelectedListener {
@@ -38,6 +41,8 @@ public class MainActivity extends FragmentActivity implements
 			MessageService.broadcastSocket.close();
 			mBound = false;
 			mMsgService = null;
+
+			unregisterReceiver(broadcastReceiver);
 		}
 
 		@Override
@@ -54,8 +59,22 @@ public class MainActivity extends FragmentActivity implements
 
 				// Initiate broadcast receiver listening to other users
 				mMsgService.broadcastListener();
+
+				// register local broadcast receiver.
+				registerReceiver(broadcastReceiver, new IntentFilter(
+						BroadcastRcvThread.BROADCAST_ADD_CONTACT));
 			} else
 				Log.i("checkBound", "Failed");
+		}
+	};
+
+	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String contact = intent.getStringExtra("contact");
+			String contactIP = intent.getStringExtra("contactIP");
+			ContactsFragment.addItems(findViewById(id.contacts_list), contact,
+					contactIP);
 		}
 	};
 	// =======================================
@@ -193,7 +212,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void sendMessage(View view) {
-		if (!ContactsFragment.contacts.isEmpty()) {
+		if (!ContactsFragment.contactsList.isEmpty()) {
 			TextView textview = (TextView) findViewById(R.id.chatView);
 			EditText editText = (EditText) findViewById(R.id.edit_message);
 			String message = editText.getText().toString();

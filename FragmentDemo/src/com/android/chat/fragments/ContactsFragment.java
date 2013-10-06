@@ -27,7 +27,7 @@ import android.widget.ListView;
 public class ContactsFragment extends ListFragment {
 	OnHeadlineSelectedListener mCallback;
 	private static int selectedIndex = 0;
-	static ArrayList<String> contacts = new ArrayList<String>();
+	static ArrayList<String> contactsList = new ArrayList<String>();
 	static ArrayAdapter<String> adapter;
 
 	// The container Activity must implement this interface so the frag can
@@ -41,20 +41,20 @@ public class ContactsFragment extends ListFragment {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		int layout = android.R.layout.simple_list_item_activated_1;
-		adapter = new ArrayAdapter<String>(getActivity(), layout, contacts);
+		adapter = new ArrayAdapter<String>(getActivity(), layout, contactsList);
 		setListAdapter(adapter);
 	}
 
 	// Method for Dynamic insertion into contacts
-	public static void addItems(View v, String contact) {
-		contacts.add(contact);
+	public static void addItems(View v, String contact, String contactIP) {
+		contactsList.add(contact);
 		adapter.notifyDataSetChanged();
-		MainActivity.getData().addContact(contact, "Enter Text here");
+		MainActivity.getData().addContact(contact, "");
 	}
 
 	// Method for Dynamic insertion into contacts
 	public static void removeItems(View v, int which) {
-		contacts.remove(which);
+		contactsList.remove(which);
 		adapter.notifyDataSetChanged();
 		MainActivity.getData().removeContact(which);
 	}

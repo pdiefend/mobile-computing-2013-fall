@@ -51,6 +51,10 @@ public class BroadcastThread extends Thread {
 
 		WifiInfo wifiInfo = wifi.getConnectionInfo();
 		int ip = wifiInfo.getIpAddress();
+		/*
+		 * InetAddress ipAd = InetAddress.getLocalHost(); String ipAdd =
+		 * ipAd.getHostAddress(); Log.i("Thread InetAddress", ipAdd);
+		 */
 		Log.i("Thread IP addr", Formatter.formatIpAddress(ip));
 
 		int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
@@ -72,7 +76,7 @@ public class BroadcastThread extends Thread {
 	public void sendOnlineStatus() {
 		try {
 			// Log.i("Thread", "here");
-			setOnlineStatus(getIpAddress() + " " + MainActivity.username);
+			setOnlineStatus(getIpAddress() + "/" + MainActivity.username);
 			DatagramPacket packet = new DatagramPacket(onlineStatus.getBytes(),
 					onlineStatus.length(), getBroadcastAddress(),
 					MainActivity.PORT);

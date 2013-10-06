@@ -19,12 +19,12 @@ public class RemoveUserDialogFragment extends DialogFragment {
 
 		builder.setTitle(R.string.remove_user_prompt);
 		// this is the breaking point
-		int len = ContactsFragment.contacts.size();
+		int len = ContactsFragment.contactsList.size();
 		CharSequence[] tmp = new CharSequence[len];
 		for (int i = 0; i < len; i++) {
 			// have to append to a string to ensure that new memory is used to
 			// get around static accesses
-			tmp[i] = "" + ContactsFragment.contacts.get(i);
+			tmp[i] = "" + ContactsFragment.contactsList.get(i);
 		}
 		builder.setItems(tmp, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {

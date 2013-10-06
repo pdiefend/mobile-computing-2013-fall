@@ -10,55 +10,59 @@ import java.util.ArrayList;
  * 
  */
 public class ChatData {
-	private ArrayList<String> contacts;
-	private ArrayList<String> messages;
+	private ArrayList<String> contact;
+	private ArrayList<String> contactIP;
 
 	public ChatData(int n) {
-		contacts = new ArrayList<String>(n);
-		messages = new ArrayList<String>(n);
+		contact = new ArrayList<String>(n);
+		contactIP = new ArrayList<String>(n);
 	}
 
 	public ChatData(ChatData tmp) {
-		this.contacts = new ArrayList<String>(contacts);
-		this.messages = new ArrayList<String>(messages);
-
+		this.contact = new ArrayList<String>(contact);
+		this.contactIP = new ArrayList<String>(contactIP);
 	}
 
-	public void addContact(int position, String contact, String message) {
-		contacts.add(position, contact);
-		messages.add(position, message);
+	public boolean contains(String contact, String contactIP) {
+		return this.contact.contains(contact)
+				&& this.contactIP.contains(contactIP);
 	}
 
-	public void addContact(String contact, String message) {
-		contacts.add(contact);
-		messages.add(message);
+	public void addContact(int position, String contact, String contactIP) {
+		this.contact.add(position, contact);
+		this.contactIP.add(position, contactIP);
 	}
 
-	public void modifyMessage(int position, String message) {
-		messages.set(position, message);
+	public void addContact(String contact, String contactIP) {
+		this.contact.add(contact);
+		this.contactIP.add(contactIP);
+	}
+
+	public void modifyMessage(int position, String contactIP) {
+		this.contactIP.set(position, contactIP);
 	}
 
 	public String getMessage(int position) {
-		return messages.get(position);
+		return this.contactIP.get(position);
 	}
 
 	public String[] getContacts() {
-		return (String[]) contacts.toArray();
+		return (String[]) this.contact.toArray();
 	}
 
 	public ArrayList<String> getContacts(boolean i) {
-		return contacts;
+		return this.contact;
 	}
 
 	public void removeContact(String contact) {
-		int index = contacts.indexOf(contact);
-		contacts.remove(index);
-		messages.remove(index);
+		int index = this.contact.indexOf(contact);
+		this.contact.remove(index);
+		this.contactIP.remove(index);
 	}
 
 	public void removeContact(int index) {
-		contacts.remove(index);
-		messages.remove(index);
+		this.contact.remove(index);
+		this.contactIP.remove(index);
 	}
 
 }
