@@ -79,7 +79,7 @@ public class BroadcastThread extends Thread {
 			setOnlineStatus(getIpAddress() + "/" + MainActivity.username);
 			DatagramPacket packet = new DatagramPacket(onlineStatus.getBytes(),
 					onlineStatus.length(), getBroadcastAddress(),
-					MainActivity.PORT);
+					MainActivity.BROADCASTPORT);
 			MessageService.broadcastSocket.send(packet);
 		} catch (IOException e) {
 			Log.e("Thread", "Exception Occured", e);

@@ -29,7 +29,7 @@ public class MessageService extends Service {
 
 	// Constructor
 	public MessageService() throws SocketException {
-		broadcastSocket = new DatagramSocket(MainActivity.PORT);
+		broadcastSocket = new DatagramSocket(MainActivity.BROADCASTPORT);
 	}
 
 	public class LocalBinder extends Binder {
@@ -41,7 +41,7 @@ public class MessageService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		try {
-			broadcastSocket = new DatagramSocket(MainActivity.PORT);
+			broadcastSocket = new DatagramSocket(MainActivity.BROADCASTPORT);
 			broadcastSocket.setBroadcast(true);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block

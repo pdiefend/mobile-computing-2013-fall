@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -46,10 +47,11 @@ public class ContactsFragment extends ListFragment {
 	}
 
 	// Method for Dynamic insertion into contacts
-	public static void addItems(View v, String contact, String contactIP) {
+	public static void addItems(View v, String contact, String contactIP,
+			String message) {
 		contactsList.add(contact);
 		adapter.notifyDataSetChanged();
-		MainActivity.getData().addContact(contact, "");
+		MainActivity.getData().addContact(contact, contactIP, "");
 	}
 
 	// Method for Dynamic insertion into contacts
@@ -57,6 +59,14 @@ public class ContactsFragment extends ListFragment {
 		contactsList.remove(which);
 		adapter.notifyDataSetChanged();
 		MainActivity.getData().removeContact(which);
+	}
+
+	public static void modifyName(View v, String contact, int which) {
+		Log.i("ContactFragment", "Entered modifyName");
+		contactsList.set(which, contact);
+		Log.i("ContactFragment", "modified contactslist");
+		adapter.notifyDataSetChanged();
+		Log.i("ContactFragment", "updated adapter");
 	}
 
 	@Override

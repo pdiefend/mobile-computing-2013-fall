@@ -20,7 +20,11 @@ public class BroadcastRcvThread extends Thread {
 	// instances for storing received contact information.
 	private String[] rcvInfo;
 	private String contact;
+	private String pcontact; // previous contact
+	private int position;
 	private String contactIP;
+	private String message;
+	private String opcode; // 0 -> add contact; 1 -> change username
 
 	public BroadcastRcvThread(Context mContext) {
 		this.mContext = mContext;
@@ -54,12 +58,33 @@ public class BroadcastRcvThread extends Thread {
 				contact = rcvInfo[1];
 				contactIP = rcvInfo[0];
 				if (!MainActivity.getData().contains(contact, contactIP)) {
-					Log.i(TAG, "Adding new contact " + contactIP + "/"
-							+ contact);
-					MainActivity.getData().addContact(contact, contactIP);
+					if (!MainActivity.getData().containsIP(contactIP)) {
+						Log.i(TAG, "Adding new contact " + contactIP + "/"
+								+ contact);
+						// will be added on ContactsFragment.
+						opcode = "New Contact";
+						message = "Chat with " + contact;
+						pcontact = "";
+						position = -1;
+						Log.i(TAG, "New contact added " + contactIP + "/"
+								+ contact);
+					} else {
+						Log.i(TAG, "Changing username of " + contactIP + " to "
+								+ contact);
+						opcode = "Change Contact";
+						pcontact = MainActivity.getData().getContactName(
+								contactIP);
+						position = ContactsFragment.contactsList
+								.indexOf(pcontact);
+						Log.i(TAG, contactIP + " changed username to "
+								+ contact);
+						MainActivity.getData().modifyContact(
+								contact,
+								MainActivity.getData().indexOfContactIP(
+										contactIP));
+					}
 					handler.removeCallbacks(sendUpdatesToUI);
 					handler.postDelayed(sendUpdatesToUI, 1000);
-					Log.i(TAG, "New contact added " + contactIP + "/" + contact);
 				} else {
 					Log.i(TAG, contact + " received already exists.");
 				}
@@ -72,8 +97,11 @@ public class BroadcastRcvThread extends Thread {
 	private Runnable sendUpdatesToUI = new Runnable() {
 		public void run() {
 			Log.i(TAG, "entered sendUpdatesToUI");
+			intent.putExtra("opcode", opcode);
 			intent.putExtra("contact", contact);
 			intent.putExtra("contactIP", contactIP);
+			intent.putExtra("message", message);
+			intent.putExtra("position", position);
 			mContext.sendBroadcast(intent);
 		}
 	};

@@ -30,7 +30,8 @@ public class MainActivity extends FragmentActivity implements
 	boolean mBound = false;
 	MessageService mMsgService;
 	public static String username = "New User";
-	public static final int PORT = 3141;
+	public static final int BROADCASTPORT = 3141;
+	public static final int MSGPORT = 2014;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -71,11 +72,33 @@ public class MainActivity extends FragmentActivity implements
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			String opcode = intent.getStringExtra("opcode");
 			String contact = intent.getStringExtra("contact");
 			String contactIP = intent.getStringExtra("contactIP");
-			ContactsFragment.addItems(findViewById(id.contacts_list), contact,
-					contactIP);
+			String message = intent.getStringExtra("message");
+			int position = intent.getIntExtra("position", -1);
+			if (opcode.compareTo("Change Contact") == 0) {
+				/*
+				 * Log.i("opcode", opcode); Log.i("contact", contact);
+				 * Log.i("contactIP", contactIP); Log.i("message", message);
+				 * Log.i("position", "" + position);
+				 */
+				ContactsFragment.modifyName(findViewById(id.contacts_list),
+						contact, position);
+			} else {
+				ContactsFragment.addItems(findViewById(id.contacts_list),
+						contact, contactIP, message);
+			}
 		}
+
+		private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String contactIP = intent.getStringExtra("contactIP");
+				String message = intent.getStringExtra("message");
+
+			}
+		};
 	};
 	// =======================================
 	private static ChatData data;
@@ -117,8 +140,8 @@ public class MainActivity extends FragmentActivity implements
 		}
 		if (savedInstanceState == null) {
 			data = new ChatData(2);
-			data.addContact(0, "Contact 1", "Contact 1 message");
-			data.addContact(1, "Contact 2", "Contact 2 message");
+			data.addContact(0, "Contact 1", null, "Contact 1 message");
+			data.addContact(1, "Contact 2", null, "Contact 2 message");
 
 			DialogFragment newFragment = new LogonDialogFragment();
 			newFragment.show(getFragmentManager(), "logon");
