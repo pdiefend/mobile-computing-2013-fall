@@ -100,9 +100,10 @@ public class MainActivity extends FragmentActivity implements
 		public void onReceive(Context context, Intent intent) {
 			String contactIP = intent.getStringExtra("ip");
 			String message = intent.getStringExtra("msg");
-
+			receiveMessage(message, contactIP);
 		}
 	};
+
 	// =======================================
 	private static ChatData data;
 
@@ -246,21 +247,27 @@ public class MainActivity extends FragmentActivity implements
 			data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
 			editText.setText("");
 
-			/*
-			 * //================================================================
-			 * ===================================== // Sends out the message
-			 * Intent messageInfo = new Intent(this, MessageService.class);
-			 * messageInfo.putExtra("recieverIP", recieverIP);
-			 * messageInfo.putExtra("message", message);
-			 * startService(messageInfo); //====================================
-			 * =================================================================
-			 */
+			// =====================================================================================================
+			// Sends out the message
+			(new BroadcastSendMsg(this, message,
+					data.getContactIP(ContactsFragment.getSelectedIndex())))
+					.start();
+
+			// =====================================================================================================
+
 		}
 	}
 
-	public void receiveMessage(View view, String msg, String ip) {
-		TextView textview = (TextView) findViewById(R.id.chatView);
-		data.modifyMessage(data.indexOfContactIP(ip), msg);
+	public void receiveMessage(String msg, String ip) {
+		int contactIndex = data.indexOfContactIP(ip);
+
+		TextView chat = (TextView) findViewById(R.id.chatView);
+		data.modifyMessage(contactIndex, msg);
+
+		// update the current message if looking at that conversation
+		if (ContactsFragment.getSelectedIndex() == contactIndex) {
+			chat.setText(msg);
+		}
 	}
 
 	@Override

@@ -57,6 +57,10 @@ public class ChatData {
 		return this.contact.get(this.contactIP.indexOf(contactIP));
 	}
 
+	public String getContactIP(int which) {
+		return this.contactIP.get(which);
+	}
+
 	// =================================================
 
 	public void addContact(int position, String contact, String contactIP,
