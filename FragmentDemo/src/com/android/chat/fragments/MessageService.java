@@ -21,6 +21,9 @@ public class MessageService extends Service {
 	BroadcastThread broadcast = new BroadcastThread(this);
 	BroadcastRcvThread broadcastRcv = new BroadcastRcvThread(this);
 
+	// Message server
+	ServerThread server = new ServerThread(this, MainActivity.MSGPORT);
+
 	/*
 	 * Declares the socket for broadcast. Used by BroadcastThread class and
 	 * BroadcastRcvThread class.
@@ -63,6 +66,11 @@ public class MessageService extends Service {
 	public void broadcastListener() {
 		broadcastRcv.start();
 		Log.i("broadcastListener", "Created");
+	}
+
+	public void waitForMsg() {
+		server.start();
+		Log.i("waitForMsg", "Started");
 	}
 
 	public void sendMessage(InetAddress sdAdd, String message) {

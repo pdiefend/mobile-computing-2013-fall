@@ -44,6 +44,7 @@ public class MainActivity extends FragmentActivity implements
 			mMsgService = null;
 
 			unregisterReceiver(broadcastReceiver);
+			unregisterReceiver(msgReceiver);
 		}
 
 		@Override
@@ -64,6 +65,8 @@ public class MainActivity extends FragmentActivity implements
 				// register local broadcast receiver.
 				registerReceiver(broadcastReceiver, new IntentFilter(
 						BroadcastRcvThread.BROADCAST_ADD_CONTACT));
+				registerReceiver(msgReceiver, new IntentFilter(
+						ClientThread.BROADCAST_MSGRCVED));
 			} else
 				Log.i("checkBound", "Failed");
 		}
@@ -90,15 +93,15 @@ public class MainActivity extends FragmentActivity implements
 						contact, contactIP, message);
 			}
 		}
+	};
 
-		private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String contactIP = intent.getStringExtra("contactIP");
-				String message = intent.getStringExtra("message");
+	private BroadcastReceiver msgReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String contactIP = intent.getStringExtra("ip");
+			String message = intent.getStringExtra("msg");
 
-			}
-		};
+		}
 	};
 	// =======================================
 	private static ChatData data;
@@ -253,6 +256,11 @@ public class MainActivity extends FragmentActivity implements
 			 * =================================================================
 			 */
 		}
+	}
+
+	public void receiveMessage(View view, String msg, String ip) {
+		TextView textview = (TextView) findViewById(R.id.chatView);
+		data.modifyMessage(data.indexOfContactIP(ip), msg);
 	}
 
 	@Override
