@@ -45,19 +45,10 @@ public class ChatFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 
-		// During startup, check if there are arguments passed to the fragment.
-		// onStart is a good place to do this because the layout has already
-		// been
-		// applied to the fragment at this point so we can safely call the
-		// method
-		// below that sets the article text.
 		Bundle args = getArguments();
 		if (args != null) {
-			// Set article based on argument passed in
 			updateArticleView(args.getInt(ARG_POSITION));
 		} else if (mCurrentPosition != -1) {
-			// Set article based on saved instance state defined during
-			// onCreateView
 			updateArticleView(mCurrentPosition);
 		}
 	}
