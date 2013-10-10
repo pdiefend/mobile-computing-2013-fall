@@ -21,6 +21,7 @@ public class ClientThread extends Thread {
 
 	// Socket instances
 	Socket clientSocket;
+	String ip;
 	OutputStream ostream;
 	PrintWriter pwrite;
 	InputStream istream;
@@ -36,49 +37,56 @@ public class ClientThread extends Thread {
 	// Local Broadcast instance for sending message
 	Intent intentSend;
 
-	public ClientThread(Context context, Socket clientSocket)
-			throws IOException {
+	public ClientThread(Context context, Socket clientSocket, String ip,
+			String message) throws IOException {
 		this.mContext = context;
 		this.clientSocket = clientSocket;
 		ostream = clientSocket.getOutputStream();
 		pwrite = new PrintWriter(ostream, true);
 		istream = clientSocket.getInputStream();
+		this.ip = ip;
 		receiveRead = new BufferedReader(new InputStreamReader(istream));
 		intentRcv = new Intent(BROADCAST_MSGRCVED);
 
 		// Initialize the broadcast listener for intent from BroadcastSendMsg
 		intentSend = new Intent(mContext, BroadcastSendMsg.class);
-
+		sendMsg = message;
 	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context mContext, Intent intent) {
-			Log.i(TAG, "Sending Message");
-			String message = intentSend.getStringExtra("msg");
-			String ip = intentSend.getStringExtra("ip");
-			sendMessage(message);
+			sendMessage();
 		}
 	};
 
-	private void sendMessage(String message) {
-		pwrite.print(sendMsg);
+	private void sendMessage() {
+		Log.i(TAG, "Intent Received");
+		String message = intentSend.getStringExtra("msg");
+		String ip = intentSend.getStringExtra("ip");
+		if (ip.compareTo(this.ip) == 0) {
+			Log.i(TAG, "Sending message: " + message + " to " + ip);
+			pwrite.print(message);
+		}
 	}
 
 	public void run() {
 		// register the broadcast
 		mContext.registerReceiver(broadcastReceiver, new IntentFilter(
 				BroadcastSendMsg.BROADCAST_MSGSENT));
+		if (sendMsg != null) {
+			pwrite.print(sendMsg);
+		}
 
 		while (true) {
 			try {
 				sendRcv();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				mContext.unregisterReceiver(broadcastReceiver);
 				e.printStackTrace();
 			}
-
 		}
+
 	}
 
 	private Runnable send = new Runnable() {

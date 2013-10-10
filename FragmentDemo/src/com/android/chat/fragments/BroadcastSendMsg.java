@@ -20,6 +20,7 @@ public class BroadcastSendMsg extends Thread {
 		this.mContext = mContext;
 		this.message = message;
 		this.ip = ip;
+		Log.i(TAG, "Sending intent: " + message + " " + ip);
 	}
 
 	public void run() {
@@ -29,13 +30,14 @@ public class BroadcastSendMsg extends Thread {
 
 	public Runnable sendMsg = new Runnable() {
 		public void run() {
+			Log.i(TAG, "Entered SendMsg");
 			broadcastMsgToSocket();
 			handler.postDelayed(this, 1000);
 		}
 	};
 
 	private void broadcastMsgToSocket() {
-		Log.i(TAG, "sending Messages");
+		Log.i(TAG, "Broadcasting the intent");
 		intent.putExtra("msg", message);
 		intent.putExtra("ip", ip);
 		mContext.sendBroadcast(intent);

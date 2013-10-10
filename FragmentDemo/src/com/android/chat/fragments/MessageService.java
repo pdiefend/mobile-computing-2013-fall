@@ -22,7 +22,8 @@ public class MessageService extends Service {
 	BroadcastRcvThread broadcastRcv = new BroadcastRcvThread(this);
 
 	// Message server
-	ServerThread server = new ServerThread(this, MainActivity.MSGPORT);
+	ServerThread server = new ServerThread(MessageService.this,
+			MainActivity.MSGPORT);
 
 	/*
 	 * Declares the socket for broadcast. Used by BroadcastThread class and

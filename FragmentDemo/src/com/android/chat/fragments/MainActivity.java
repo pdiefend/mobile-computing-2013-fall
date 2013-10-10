@@ -30,6 +30,7 @@ public class MainActivity extends FragmentActivity implements
 	boolean mBound = false;
 	MessageService mMsgService;
 	public static String username = "New User";
+	public static int MAXUSERS = 40;
 	public static final int BROADCASTPORT = 3141;
 	public static final int MSGPORT = 2014;
 
@@ -61,6 +62,9 @@ public class MainActivity extends FragmentActivity implements
 
 				// Initiate broadcast receiver listening to other users
 				mMsgService.broadcastListener();
+
+				// Start Server to wait for message
+				mMsgService.waitForMsg();
 
 				// register local broadcast receiver.
 				registerReceiver(broadcastReceiver, new IntentFilter(
@@ -143,10 +147,13 @@ public class MainActivity extends FragmentActivity implements
 					.add(R.id.fragment_container, firstFragment).commit();
 		}
 		if (savedInstanceState == null) {
-			data = new ChatData(2);
-			data.addContact(0, "Contact 1", null, "Contact 1 message");
-			data.addContact(1, "Contact 2", null, "Contact 2 message");
+			// ==================================================
+			data = new ChatData(MAXUSERS);
 
+			// Don't do this:
+			// data.addContact(0, "Contact 1", null, "Contact 1 message");
+			// data.addContact(1, "Contact 2", null, "Contact 2 message");
+			// ==================================================
 			DialogFragment newFragment = new LogonDialogFragment();
 			newFragment.show(getFragmentManager(), "logon");
 		}
@@ -249,6 +256,11 @@ public class MainActivity extends FragmentActivity implements
 
 			// =====================================================================================================
 			// Sends out the message
+
+			Log.i("data",
+					" "
+							+ data.getContactIP(ContactsFragment
+									.getSelectedIndex()));
 			(new BroadcastSendMsg(this, message,
 					data.getContactIP(ContactsFragment.getSelectedIndex())))
 					.start();
