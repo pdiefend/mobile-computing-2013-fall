@@ -10,12 +10,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 
 public class ServerThread extends Thread {
 	private static final String TAG = "ServerThread: ";
 
 	Context mContext;
+
+	// Schedule handler for broadcastReceiver
+	private Handler handler;
+	HandlerThread handlerThread;
 
 	// List of ip that has created client socket
 	public ArrayList<String> mClientIP;
@@ -27,6 +34,9 @@ public class ServerThread extends Thread {
 		this.mContext = context;
 		this.port = port;
 		mClientIP = new ArrayList<String>(MainActivity.MAXUSERS);
+
+		handlerThread = new HandlerThread("MyNewClientThread");
+
 	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -44,7 +54,6 @@ public class ServerThread extends Thread {
 			Log.i(TAG, "Establishing new client connection with " + ip);
 			Socket sock = null;
 			try {
-
 				sock = new Socket(ip, port);
 				Log.i(TAG, "Here");
 			} catch (UnknownHostException e) {
@@ -66,8 +75,17 @@ public class ServerThread extends Thread {
 
 	public void run() {
 		Log.i(TAG, "started");
+
+		// Set up broadcast Receiver for receiving request from the main
+		// activity
+		Looper.prepare();
+		handlerThread.start();
+		Looper looper = handlerThread.getLooper();
+		handler = new Handler(looper);
 		mContext.registerReceiver(broadcastReceiver, new IntentFilter(
-				BroadcastSendMsg.BROADCAST_MSGSENT));
+				BroadcastSendMsg.BROADCAST_MSGSENT), null, handler);
+
+		// Waiting for client on messaging port.
 		waitingForClient();
 	}
 

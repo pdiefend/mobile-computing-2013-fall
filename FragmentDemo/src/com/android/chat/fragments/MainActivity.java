@@ -253,6 +253,7 @@ public class MainActivity extends FragmentActivity implements
 			textview.setText(message);
 			data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
 			editText.setText("");
+			Log.i("sendMessage", "Sending " + message);
 
 			// =====================================================================================================
 			// Sends out the message

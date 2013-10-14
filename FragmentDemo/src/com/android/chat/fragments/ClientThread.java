@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 
 public class ClientThread extends Thread {
@@ -31,11 +33,14 @@ public class ClientThread extends Thread {
 
 	// Local Broadcast instances for update message
 	public static final String BROADCAST_MSGRCVED = "com.android.chat.fragments.msgrcved";
-	private final Handler handler = new Handler();
 	Intent intentRcv;
 
 	// Local Broadcast instance for sending message
 	Intent intentSend;
+
+	// Schedule handler for broadcastReceiver
+	private Handler handler;
+	HandlerThread handlerThread;
 
 	public ClientThread(Context context, Socket clientSocket, String ip,
 			String message) throws IOException {
@@ -51,6 +56,7 @@ public class ClientThread extends Thread {
 		// Initialize the broadcast listener for intent from BroadcastSendMsg
 		intentSend = new Intent(mContext, BroadcastSendMsg.class);
 		sendMsg = message;
+		handlerThread = new HandlerThread("MyNewClientThread");
 	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -71,9 +77,15 @@ public class ClientThread extends Thread {
 	}
 
 	public void run() {
-		// register the broadcast
+		// Set up broadcast Receiver for receiving request from the main
+		// activity
+		Looper.prepare();
+		handlerThread.start();
+		Looper looper = handlerThread.getLooper();
+		handler = new Handler(looper);
 		mContext.registerReceiver(broadcastReceiver, new IntentFilter(
-				BroadcastSendMsg.BROADCAST_MSGSENT));
+				BroadcastSendMsg.BROADCAST_MSGSENT), null, handler);
+
 		if (sendMsg != null) {
 			pwrite.print(sendMsg);
 		}
