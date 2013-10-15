@@ -104,7 +104,9 @@ public class ServerThread extends Thread {
 
 		try {
 			while (true) {
+				Log.i(TAG, "Entered accepting");
 				clientSocket = serverSocket.accept();
+				Log.i(TAG, "accepted");
 				clientIP = clientSocket.getInetAddress().getHostAddress();
 				mClientIP.add(clientIP);
 				Log.i(TAG, "Creating client thread..." + clientIP);

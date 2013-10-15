@@ -57,16 +57,18 @@ public class ClientThread extends Thread {
 		intentSend = new Intent(mContext, BroadcastSendMsg.class);
 		sendMsg = message;
 		handlerThread = new HandlerThread("MyNewClientThread");
+		Log.i(TAG, "Created clientThread with" + ip);
+
 	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context mContext, Intent intent) {
-			sendMessage();
+			sendMessage(intent);
 		}
 	};
 
-	private void sendMessage() {
+	private void sendMessage(Intent intentSend) {
 		Log.i(TAG, "Intent Received");
 		String message = intentSend.getStringExtra("msg");
 		String ip = intentSend.getStringExtra("ip");

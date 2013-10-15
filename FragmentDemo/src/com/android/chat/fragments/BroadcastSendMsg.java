@@ -13,6 +13,8 @@ public class BroadcastSendMsg extends Thread {
 	Intent intent = new Intent(BROADCAST_MSGSENT);
 	Context mContext;
 
+	boolean running = true;
+
 	private String message;
 	private String ip;
 
@@ -24,8 +26,11 @@ public class BroadcastSendMsg extends Thread {
 	}
 
 	public void run() {
-		handler.removeCallbacks(sendMsg);
-		handler.postDelayed(sendMsg, 1000);
+		while (running) {
+			handler.removeCallbacks(sendMsg);
+			handler.postDelayed(sendMsg, 1000);
+			running = false;
+		}
 	}
 
 	public Runnable sendMsg = new Runnable() {

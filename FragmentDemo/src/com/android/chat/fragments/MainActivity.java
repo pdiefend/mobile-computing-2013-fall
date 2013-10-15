@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -27,6 +28,34 @@ public class MainActivity extends FragmentActivity implements
 		ContactsFragment.OnHeadlineSelectedListener {
 
 	// =======================================
+
+	private static final String TAG = "MainActivity";
+
+	// Broadcast sending msg
+	public static final String BROADCAST_MSGSENT = "com.android.chat.fragment.mainactivity";
+	private final Handler handler = new Handler();
+	Intent intentMsg = new Intent(BROADCAST_MSGSENT);
+	Context mContext;
+	private String message;
+	private String ip;
+
+	public Runnable sendMsg = new Runnable() {
+		public void run() {
+			Log.i(TAG, "Entered SendMsg");
+			broadcastMsgToSocket();
+			handler.postDelayed(this, 1000);
+		}
+	};
+
+	private void broadcastMsgToSocket() {
+		Log.i(TAG, "Broadcasting the intent");
+		intentMsg.putExtra("msg", message);
+		intentMsg.putExtra("ip", ip);
+		sendBroadcast(intentMsg);
+	}
+
+	// End of broadcasting send msg
+
 	boolean mBound = false;
 	MessageService mMsgService;
 	public static String username = "New User";
@@ -253,18 +282,19 @@ public class MainActivity extends FragmentActivity implements
 			textview.setText(message);
 			data.modifyMessage(ContactsFragment.getSelectedIndex(), message);
 			editText.setText("");
-			Log.i("sendMessage", "Sending " + message);
 
 			// =====================================================================================================
 			// Sends out the message
-
+			Log.i("sendMessage", "Sending " + message);
 			Log.i("data",
 					" "
 							+ data.getContactIP(ContactsFragment
 									.getSelectedIndex()));
-			(new BroadcastSendMsg(this, message,
-					data.getContactIP(ContactsFragment.getSelectedIndex())))
-					.start();
+			this.ip = data.getContactIP(ContactsFragment.getSelectedIndex());
+			this.message = message;
+			broadcastMsgToSocket();
+			// handler.removeCallbacks(sendMsg);
+			// handler.postDelayed(sendMsg, 1000);
 
 			// =====================================================================================================
 
