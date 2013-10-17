@@ -18,7 +18,6 @@ public class BroadcastRcvThread extends Thread {
 	Intent intent = new Intent(BROADCAST_ADD_CONTACT);
 
 	// instances for storing received contact information.
-	private String[] rcvInfo;
 	private String contact;
 	private String pcontact; // previous contact
 	private int position;
@@ -53,8 +52,6 @@ public class BroadcastRcvThread extends Thread {
 			while (true) {
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				socket.receive(packet);
-				// rcvInfo = parseInfo(new String(packet.getData(), 0,
-				// packet.getLength()));
 				contact = new String(packet.getData(), 0, packet.getLength());
 				contactIP = packet.getAddress().getHostAddress();
 				if (!MainActivity.getData().contains(contact, contactIP)) {
@@ -105,11 +102,5 @@ public class BroadcastRcvThread extends Thread {
 			mContext.sendBroadcast(intent);
 		}
 	};
-
-	// Assume the broadcasted string is in the format: "IP/username"
-	private String[] parseInfo(String rcvedUserInfo) {
-		String[] tokens = rcvedUserInfo.split("/");
-		return tokens;
-	}
 
 }
