@@ -1,10 +1,12 @@
 package com.android.chat.fragments;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -46,9 +48,10 @@ public class ClientThread extends Thread {
 			String message) throws IOException {
 		this.mContext = context;
 		this.clientSocket = clientSocket;
-		ostream = clientSocket.getOutputStream();
-		pwrite = new PrintWriter(ostream, true);
-		istream = clientSocket.getInputStream();
+		ostream = this.clientSocket.getOutputStream();
+		pwrite = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+				ostream)), true);
+		istream = this.clientSocket.getInputStream();
 		this.ip = ip;
 		receiveRead = new BufferedReader(new InputStreamReader(istream));
 		intentRcv = new Intent(BROADCAST_MSGRCVED);
@@ -74,7 +77,8 @@ public class ClientThread extends Thread {
 		String ip = intentSend.getStringExtra("ip");
 		if (ip.compareTo(this.ip) == 0) {
 			Log.i(TAG, "Sending message: " + message + " to " + ip);
-			pwrite.print(message);
+			pwrite.println(message);
+			// pwrite.flush();
 		}
 	}
 
@@ -89,7 +93,9 @@ public class ClientThread extends Thread {
 				BroadcastSendMsg.BROADCAST_MSGSENT), null, handler);
 
 		if (sendMsg != null) {
-			pwrite.print(sendMsg);
+			Log.i(TAG, "=========================================");
+			pwrite.println(sendMsg);
+			// pwrite.flush();
 		}
 
 		while (true) {

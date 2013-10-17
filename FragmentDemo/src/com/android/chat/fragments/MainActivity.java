@@ -133,6 +133,8 @@ public class MainActivity extends FragmentActivity implements
 		public void onReceive(Context context, Intent intent) {
 			String contactIP = intent.getStringExtra("ip");
 			String message = intent.getStringExtra("msg");
+			Log.i(TAG, "updating UI msg: " + message + " " + contactIP
+					+ " ====================");
 			receiveMessage(message, contactIP);
 		}
 	};
