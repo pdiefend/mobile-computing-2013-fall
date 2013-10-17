@@ -34,7 +34,7 @@ public class BroadcastThread extends Thread {
 			while (true) {
 				Log.i("Thread", "Ping");
 				this.sendOnlineStatus();
-				Thread.sleep(10000);
+				Thread.sleep(5000);
 			}
 		} catch (InterruptedException ex) {
 			Log.e("Thread", "Exception caught");
@@ -76,7 +76,7 @@ public class BroadcastThread extends Thread {
 	public void sendOnlineStatus() {
 		try {
 			// Log.i("Thread", "here");
-			setOnlineStatus(getIpAddress() + "/" + MainActivity.username);
+			setOnlineStatus(MainActivity.username);
 			DatagramPacket packet = new DatagramPacket(onlineStatus.getBytes(),
 					onlineStatus.length(), getBroadcastAddress(),
 					MainActivity.BROADCASTPORT);

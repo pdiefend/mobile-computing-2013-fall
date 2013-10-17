@@ -53,10 +53,10 @@ public class BroadcastRcvThread extends Thread {
 			while (true) {
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				socket.receive(packet);
-				rcvInfo = parseInfo(new String(packet.getData(), 0,
-						packet.getLength()));
-				contact = rcvInfo[1];
-				contactIP = rcvInfo[0];
+				// rcvInfo = parseInfo(new String(packet.getData(), 0,
+				// packet.getLength()));
+				contact = new String(packet.getData(), 0, packet.getLength());
+				contactIP = packet.getAddress().getHostAddress();
 				if (!MainActivity.getData().contains(contact, contactIP)) {
 					if (!MainActivity.getData().containsIP(contactIP)) {
 						Log.i(TAG, "Adding new contact " + contactIP + "/"

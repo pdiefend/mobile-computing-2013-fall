@@ -60,8 +60,8 @@ public class MainActivity extends FragmentActivity implements
 	MessageService mMsgService;
 	public static String username = "New User";
 	public static int MAXUSERS = 40;
-	public static final int BROADCASTPORT = 3141;
-	public static final int MSGPORT = 2014;
+	public static final int BROADCASTPORT = 4001;
+	public static final int MSGPORT = 4444;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 
