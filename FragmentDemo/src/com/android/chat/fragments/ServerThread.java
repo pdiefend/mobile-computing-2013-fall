@@ -64,6 +64,7 @@ public class ServerThread extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			mClientIP.add(ip);
 			try {
 				(new ClientThread(mContext, sock, ip, message)).start();
 			} catch (IOException e) {
