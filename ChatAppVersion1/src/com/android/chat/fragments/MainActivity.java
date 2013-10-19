@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.chat.fragments.MessageService.LocalBinder;
 import com.android.chat.fragments.R.id;
@@ -348,14 +349,20 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void receiveMessage(String msg, String ip) {
-		int contactIndex = data.indexOfContactIP(ip);
+		if (data.containsIP(ip)) {
+			int contactIndex = data.indexOfContactIP(ip);
 
-		TextView chat = (TextView) findViewById(R.id.chatView);
-		data.modifyMessage(contactIndex, msg);
+			TextView chat = (TextView) findViewById(R.id.chatView);
+			data.modifyMessage(contactIndex, msg);
 
-		// update the current message if looking at that conversation
-		if (ContactsFragment.getSelectedIndex() == contactIndex) {
-			chat.setText(msg);
+			// update the current message if looking at that conversation
+			if (ContactsFragment.getSelectedIndex() == contactIndex) {
+				chat.setText(msg);
+			}
+		} else {
+			Toast.makeText(this,
+					"Unknown user ip: " + ip + " is sending you message",
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 
