@@ -1,0 +1,112 @@
+22a23
+> import android.widget.Toast;
+41a43,46
+> 	private boolean isServerThread = false;
+> 	private boolean isBroadcastThread = false;
+> 	private boolean isBroadcastRcvThread = false;
+> 
+63,64c68,72
+< 	public static final int BROADCASTPORT = 3141;
+< 	public static final int MSGPORT = 2014;
+---
+> 	public static final int BROADCASTPORT = 4001;
+> 	public static final int MSGPORT = 4444;
+> 
+> 	// Service Binding intent
+> 	Intent msgServiceIntent;
+84c92
+< 			LocalBinder mLocalBinder = (LocalBinder) service;
+---
+> 			LocalBinder mLocalBinder = (MessageService.LocalBinder) service;
+90c98,101
+< 				mMsgService.broadcastOnline();
+---
+> 				if (!isBroadcastThread) {
+> 					mMsgService.broadcastOnline();
+> 					isBroadcastThread = true;
+> 				}
+93c104,107
+< 				mMsgService.broadcastListener();
+---
+> 				if (!isBroadcastRcvThread) {
+> 					mMsgService.broadcastListener();
+> 					isBroadcastRcvThread = true;
+> 				}
+96c110,113
+< 				mMsgService.waitForMsg();
+---
+> 				if (!isServerThread) {
+> 					mMsgService.waitForMsg();
+> 					isServerThread = true;
+> 				}
+158,161c175,176
+< 		/*
+< 		 * Intent msgServiceInit = new Intent(this, MessageService.class);
+< 		 * msgServiceInit.putExtra("PORT", PORT); startService(msgServiceInit);
+< 		 */
+---
+> 		msgServiceIntent = new Intent(this, MessageService.class);
+> 		startService(msgServiceIntent);
+163c178
+< 
+---
+> 		bindService(msgServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+203d217
+< 
+217,219c231,237
+< 		Intent mIntent = new Intent(this, MessageService.class);
+< 		// startService(mIntent);
+< 		bindService(mIntent, mConnection, Context.BIND_AUTO_CREATE);
+---
+> 		if (!mBound) {
+> 			Log.i(TAG, "Rebinding service onStart");
+> 			bindService(msgServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+> 		} else {
+> 			Log.i(TAG, "Service is still bound onStart");
+> 		}
+> 
+227a246,255
+> 		// ========================================
+> 		// unbind the message service onStop
+> 		if (mBound) {
+> 			Log.i("checkBound", "mBound is True at onDestroy");
+> 			unbindService(mConnection);
+> 			mBound = false;
+> 		} else
+> 			Log.i("checkBound", "mBound is False at onDestroy");
+> 		stopService(msgServiceIntent);
+> 		// ========================================
+243,244d270
+< 		unregisterReceiver(broadcastReceiver);
+< 		unregisterReceiver(msgReceiver);
+251a278,283
+> 		if (!mBound) {
+> 			Log.i(TAG, "Rebinding service onResume");
+> 			bindService(msgServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+> 		} else {
+> 			Log.i(TAG, "Service is still bound onResume");
+> 		}
+320c352,353
+< 		int contactIndex = data.indexOfContactIP(ip);
+---
+> 		if (data.containsIP(ip)) {
+> 			int contactIndex = data.indexOfContactIP(ip);
+322,323c355,356
+< 		TextView chat = (TextView) findViewById(R.id.chatView);
+< 		data.modifyMessage(contactIndex, msg);
+---
+> 			TextView chat = (TextView) findViewById(R.id.chatView);
+> 			data.modifyMessage(contactIndex, msg);
+325,327c358,365
+< 		// update the current message if looking at that conversation
+< 		if (ContactsFragment.getSelectedIndex() == contactIndex) {
+< 			chat.setText(msg);
+---
+> 			// update the current message if looking at that conversation
+> 			if (ContactsFragment.getSelectedIndex() == contactIndex) {
+> 				chat.setText(msg);
+> 			}
+> 		} else {
+> 			Toast.makeText(this,
+> 					"Unknown user ip: " + ip + " is sending you message",
+> 					Toast.LENGTH_SHORT).show();

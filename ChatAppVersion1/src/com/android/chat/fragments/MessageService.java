@@ -1,5 +1,6 @@
 package com.android.chat.fragments;
 
+import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -37,7 +38,10 @@ public class MessageService extends Service {
 
 	// Constructor
 	public MessageService() throws SocketException {
+		Log.i("<===========", "Constructor");
+		if (broadcastSocket == null)
 		broadcastSocket = new DatagramSocket(MainActivity.BROADCASTPORT);
+		Log.i("<===========", "Constructor2");
 	}
 
 	public class LocalBinder extends Binder {
@@ -48,29 +52,42 @@ public class MessageService extends Service {
 
 	@Override
 	public boolean onUnbind(Intent intent) {
+		// unbind is only called when the app is crashing
+		// or when the OS is killing it.
+		Log.i("<===========", "UNBIND CALLED");
+		Log.i("<===========", ""+broadcastSocket.getLocalPort());
+		//broadcastSocket.close();
 		return true;
 	}
 
 	@Override
+	public IBinder onBind(Intent intent) {
+		Log.i("<===========", "BIND CALLED");
+		return mBinder;
+	}
+	
+	@Override
 	public void onDestroy() {
 		isServiceAlive = false;
+		try{unregisterReceiver(this.server.broadcastReceiver);}
+		catch(Exception e){}
+		try{this.server.serverSocket.close();}
+		catch(IOException e){e.printStackTrace(); System.exit(-2);}
 		super.onDestroy();
 	}
 
 	@Override
-	public IBinder onBind(Intent intent) {
-		return mBinder;
-	}
-
-	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.i(TAG, "Received start id " + startId + ": " + intent);
+		Log.i(TAG, "Received start ID " + startId + ": " + intent);
 		isServiceAlive = true;
 		try {
+			if (broadcastSocket == null){
 			broadcastSocket = new DatagramSocket(MainActivity.BROADCASTPORT);
 			broadcastSocket.setBroadcast(true);
+			}
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
+			Log.e(TAG, "FAILURE <==============");
 			e.printStackTrace();
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -83,6 +100,7 @@ public class MessageService extends Service {
 	}
 
 	public void broadcastListener() {
+		
 		broadcastRcv = new BroadcastRcvThread(this);
 		broadcastRcv.start();
 		Log.i("broadcastListener", "Created");

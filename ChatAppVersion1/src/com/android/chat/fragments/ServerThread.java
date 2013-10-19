@@ -19,7 +19,8 @@ public class ServerThread extends Thread {
 	private static final String TAG = "ServerThread: ";
 
 	Context mContext;
-
+	ServerSocket serverSocket;
+	
 	// Schedule handler for broadcastReceiver
 	private Handler handler;
 	HandlerThread handlerThread;
@@ -40,7 +41,7 @@ public class ServerThread extends Thread {
 
 	}
 
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			initiateClientSocket(intent);
@@ -94,11 +95,12 @@ public class ServerThread extends Thread {
 	}
 
 	public void waitingForClient() {
-		ServerSocket serverSocket = null;
 		Socket clientSocket = null;
 		String clientIP = null;
+		serverSocket = null;
 
 		try {
+			Log.i(TAG + ".ID" + this.getId(), "Creating Server Socket");
 			serverSocket = new ServerSocket(port);
 			Log.i(TAG + ".ID" + this.getId(), "Created Server Socket");
 		} catch (IOException e) {
@@ -119,9 +121,15 @@ public class ServerThread extends Thread {
 						.start();
 			}
 		} catch (IOException e) {
-			mContext.unregisterReceiver(broadcastReceiver);
+			try {mContext.unregisterReceiver(broadcastReceiver);}
+			catch (Exception ex){}
 			System.out.println("Accept failed: " + port);
-			System.exit(-1);
+			// System.exit(-1);
+			// ^ Don't do that! 
+			// IO will get thrown because the socket was closed but if the socket is not
+			// closed the reinstantiated Thread after onDestroy() is called (and it will be)
+			// will not be able to open the socket since the zombie thread has it locked.
+			// The zombie thread will be garbage collected by the OS but not quickly enough
 		}
 		Log.i(TAG + ".ID" + this.getId(), "I died gracefully");
 	}

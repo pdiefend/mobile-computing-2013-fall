@@ -171,7 +171,7 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.contacts_view);
 
 		// ===================================
-		// Starts the message service
+		// Starts the message servicemConnection
 		msgServiceIntent = new Intent(this, MessageService.class);
 		startService(msgServiceIntent);
 		// Bind the message service
@@ -231,6 +231,7 @@ public class MainActivity extends FragmentActivity implements
 		if (!mBound) {
 			Log.i(TAG, "Rebinding service onStart");
 			bindService(msgServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+			mBound = true;
 		} else {
 			Log.i(TAG, "Service is still bound onStart");
 		}
@@ -268,6 +269,8 @@ public class MainActivity extends FragmentActivity implements
 		} else
 			Log.i("checkBound", "mBound is False at onPause");
 		// ========================================
+		unregisterReceiver(broadcastReceiver);
+		unregisterReceiver(msgReceiver);
 	}
 
 	@Override
@@ -278,6 +281,7 @@ public class MainActivity extends FragmentActivity implements
 		if (!mBound) {
 			Log.i(TAG, "Rebinding service onResume");
 			bindService(msgServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
+			mBound = true;
 		} else {
 			Log.i(TAG, "Service is still bound onResume");
 		}
