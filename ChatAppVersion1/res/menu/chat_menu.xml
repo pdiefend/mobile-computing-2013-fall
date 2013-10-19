@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/item_add_contact"
+        android:icon="@android:drawable/ic_input_add"
+        android:showAsAction="always"
+        android:title="@string/add_user_prompt">
+    </item>
+    
+    <item
+        android:id="@+id/item_remove_contact"
+        android:icon="@android:drawable/ic_delete"
+        android:showAsAction="always"
+        android:title="@string/remove_user_prompt">
+    </item>
+    
+        <item
+        android:id="@+id/item_full_screen"
+        android:icon="@android:drawable/ic_menu_zoom"
+        android:showAsAction="always"
+        android:title="@string/ui_menu_send">
+    </item>
+    
+    <item
+        android:id="@+id/item_change_username"
+        android:icon="@android:drawable/presence_online"
+        android:showAsAction="always|withText"
+        android:title="@string/ui_menu_user">
+    </item>
+
+    
+</menu>
