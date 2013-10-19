@@ -37,6 +37,7 @@ public class FullScreenChatActivity extends Activity {
 		textview.setText(message);
 		MainActivity.getData().modifyMessage(
 				ContactsFragment.getSelectedIndex(), message);
+		editText.setText("");
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {

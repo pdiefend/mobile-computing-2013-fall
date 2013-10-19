@@ -38,10 +38,8 @@ public class MessageService extends Service {
 
 	// Constructor
 	public MessageService() throws SocketException {
-		Log.i("<===========", "Constructor");
 		if (broadcastSocket == null)
 		broadcastSocket = new DatagramSocket(MainActivity.BROADCASTPORT);
-		Log.i("<===========", "Constructor2");
 	}
 
 	public class LocalBinder extends Binder {
@@ -52,6 +50,7 @@ public class MessageService extends Service {
 
 	@Override
 	public boolean onUnbind(Intent intent) {
+		super.onUnbind(intent);
 		// unbind is only called when the app is crashing
 		// or when the OS is killing it.
 		Log.i("<===========", "UNBIND CALLED");

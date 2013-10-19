@@ -252,6 +252,7 @@ public class MainActivity extends FragmentActivity implements
 			mBound = false;
 		} else
 			Log.i("checkBound", "mBound is False at onDestroy");
+		// unbindService(mConnection);
 		stopService(msgServiceIntent);
 		// ========================================
 	}
@@ -382,15 +383,16 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// same as using a normal menu
 		switch (item.getItemId()) {
-		case R.id.item_full_screen:
+		/*case R.id.item_full_screen:
 			Intent intent = new Intent(this, FullScreenChatActivity.class);
 			startActivity(intent);
 			break;
+			*/
 		case R.id.item_change_username:
 			DialogFragment logonFragment = new LogonDialogFragment();
 			logonFragment.show(getFragmentManager(), "logon");
 			break;
-		case R.id.item_add_contact:
+		/*case R.id.item_add_contact:
 			DialogFragment addFragment = new AddUserDialogFragment();
 			addFragment.show(getFragmentManager(), "addUser");
 			break;
@@ -398,6 +400,7 @@ public class MainActivity extends FragmentActivity implements
 			DialogFragment removeFragment = new RemoveUserDialogFragment();
 			removeFragment.show(getFragmentManager(), "removeUser");
 			break;
+			*/
 		// add other button options here
 		}
 		return true;
