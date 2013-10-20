@@ -20,7 +20,7 @@ public class ServerThread extends Thread {
 
 	Context mContext;
 	ServerSocket serverSocket;
-	
+
 	// Schedule handler for broadcastReceiver
 	private Handler handler;
 	HandlerThread handlerThread;
@@ -121,16 +121,20 @@ public class ServerThread extends Thread {
 						.start();
 			}
 		} catch (IOException e) {
-			try {mContext.unregisterReceiver(broadcastReceiver);}
-			catch (Exception ex){}
+			mContext.unregisterReceiver(broadcastReceiver);
 			System.out.println("Accept failed: " + port);
 			// System.exit(-1);
-			// ^ Don't do that! 
-			// IO will get thrown because the socket was closed but if the socket is not
-			// closed the reinstantiated Thread after onDestroy() is called (and it will be)
-			// will not be able to open the socket since the zombie thread has it locked.
-			// The zombie thread will be garbage collected by the OS but not quickly enough
+			// ^ Don't do that!
+			// IO will get thrown because the socket was closed but if the
+			// socket is not
+			// closed the reinstantiated Thread after onDestroy() is called (and
+			// it will be)
+			// will not be able to open the socket since the zombie thread has
+			// it locked.
+			// The zombie thread will be garbage collected by the OS but not
+			// quickly enough
 		}
+		mContext.unregisterReceiver(broadcastReceiver);
 		Log.i(TAG + ".ID" + this.getId(), "I died gracefully");
 	}
 }
