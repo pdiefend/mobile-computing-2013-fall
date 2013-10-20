@@ -108,6 +108,7 @@ public class ClientThread extends Thread {
 				e.printStackTrace();
 			}
 		}
+		mContext.unregisterReceiver(broadcastReceiver);
 		Log.i(TAG + ".ID" + this.getId(), "I died gracefully");
 	}
 
