@@ -121,7 +121,10 @@ public class ServerThread extends Thread {
 						.start();
 			}
 		} catch (IOException e) {
-			mContext.unregisterReceiver(broadcastReceiver);
+			try {
+				mContext.unregisterReceiver(broadcastReceiver);
+			} catch (Exception ex) {
+			}
 			System.out.println("Accept failed: " + port);
 			// System.exit(-1);
 			// ^ Don't do that!
@@ -134,7 +137,10 @@ public class ServerThread extends Thread {
 			// The zombie thread will be garbage collected by the OS but not
 			// quickly enough
 		}
-		mContext.unregisterReceiver(broadcastReceiver);
+		try {
+			mContext.unregisterReceiver(broadcastReceiver);
+		} catch (Exception ex) {
+		}
 		Log.i(TAG + ".ID" + this.getId(), "I died gracefully");
 	}
 }
