@@ -12,6 +12,8 @@ public class Plan13 {
 	private final boolean DEBUG = false;
 	private final boolean TEST = false;
 
+	String TLE = "";
+
 	double rx, tx;
 	double observer_lon;
 	double observer_lat;
@@ -690,20 +692,39 @@ public class Plan13 {
 		System.err.println("Not Yet Implemented");
 		System.exit(-1);
 
+		this.TLE = tle;
+
+		/*
+		 * ISS (ZARYA) 1 25544U 98067A 08264.51782528 -.00002182 00000-0
+		 * -11606-4 0 2927 2 25544 51.6416 247.4627 0006703 130.5360 325.0288
+		 * 15.72125391563537
+		 */
 		// TODO
 	}
 
 	/**
+	 * Check all these descriptions
+	 * http://www.amsat.org/amsat/articles/g3ruh/111.html
+	 * 
 	 * @param YE_in
+	 *            Year epoch? <===================
 	 * @param TE_in
+	 *            Time epoch? <===================
 	 * @param IN_in
+	 *            Inclination [Degrees] (L2 9-16)
 	 * @param RA_in
+	 *            Right Ascension (L2 18-25)
 	 * @param EC_in
+	 *            Eccentricity (L2 27-33)
 	 * @param WP_in
+	 *            Arguement of Perigee [Degrees] (L2 35-42)
 	 * @param MA_in
+	 *            Mean Anomlay [Degrees] (L2 44-51)
 	 * @param MM_in
+	 *            Mean Motion [Revs/day] (L2 53-63)
 	 * @param M2_in
 	 * @param RV_in
+	 *            Revolution number at epoch [Revs] (L2 64-68)
 	 * @param ALON_in
 	 */
 	void setElements(double YE_in, double TE_in, double IN_in, double RA_in,
@@ -764,5 +785,17 @@ public class Plan13 {
 		double factor = dopplerFactor * 1E11;
 		double doppler_sixfour = freq * dopplerFactor;
 		return (int) (doppler_sixfour / 1E11);
+	}
+
+	double getAzimuth() {
+		return this.AZ;
+	}
+
+	double getElevation() {
+		return this.EL;
+	}
+
+	String getTLE() {
+		return this.TLE;
 	}
 }
