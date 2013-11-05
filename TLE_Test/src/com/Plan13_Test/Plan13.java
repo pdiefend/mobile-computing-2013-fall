@@ -606,8 +606,11 @@ public class Plan13 {
 
 	/**
 	 * @param lon
+	 *            east is positive
 	 * @param lat
+	 *            north is positive
 	 * @param height
+	 *            altitude
 	 */
 	void setLocation(double lon, double lat, int height) {
 		observer_lon = lon;// -64.375; //0.06; // lon east is
@@ -623,11 +626,17 @@ public class Plan13 {
 
 	/**
 	 * @param yearIn
+	 *            year
 	 * @param monthIn
+	 *            month
 	 * @param mDayIn
+	 *            day
 	 * @param hourIn
+	 *            hour (24 military)
 	 * @param minIn
+	 *            minute
 	 * @param secIn
+	 *            second
 	 */
 	void setTime(int yearIn, int monthIn, int mDayIn, int hourIn, int minIn,
 			int secIn) {
@@ -671,6 +680,17 @@ public class Plan13 {
 			System.out.println(TN);
 			System.out.println("End setTime()");
 		}
+	}
+
+	/**
+	 * @param tle
+	 *            Two-Line Element
+	 */
+	void setElements(String tle) {
+		System.err.println("Not Yet Implemented");
+		System.exit(-1);
+
+		// TODO
 	}
 
 	/**
