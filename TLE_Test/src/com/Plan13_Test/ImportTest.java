@@ -37,6 +37,9 @@ public class ImportTest {
 			m2 += "0";
 		}
 		m2 = line.substring(53, 54) + "0." + m2 + line.substring(54, 59);
+
+		System.out.println("<================" + m2);
+
 		double M2 = Double.parseDouble(m2); // M2 = BSTAR drag term
 
 		// Get next Line

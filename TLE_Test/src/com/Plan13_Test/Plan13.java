@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class Plan13 {
 
-	private final boolean DEBUG = false;
+	private final boolean DEBUG = true;
 	private final boolean TEST = false;
 
 	String TLE = "";
@@ -717,12 +717,16 @@ public class Plan13 {
 		YE = Double.parseDouble(line.substring(18, 20)); // Epoch Year
 		TE = Double.parseDouble(line.substring(20, 32)); // Epoch Day
 
-		String m2 = "";
-		for (int i = Integer.parseInt(line.substring(60, 61)); i > 0; i--) {
-			m2 += "0";
-		}
-		m2 = line.substring(53, 54) + "0." + m2 + line.substring(54, 59);
-		M2 = Double.parseDouble(m2); // M2 = BSTAR drag term
+		/*
+		 * String m2 = ""; for (int i = Integer.parseInt(line.substring(60,
+		 * 61)); i > 0; i--) { m2 += "0"; } m2 = line.substring(53, 54) + "0." +
+		 * m2 + line.substring(54, 59);
+		 * 
+		 * // System.out.println("<================" + m2); M2 =
+		 * Double.parseDouble(m2); // M2 = BSTAR drag term
+		 */
+
+		M2 = Double.parseDouble(line.substring(32, 42));
 
 		// Get next Line
 		line = scan.nextLine();
@@ -739,7 +743,12 @@ public class Plan13 {
 		WP = Double.parseDouble(line.substring(34, 42)); // Argument of Perigee
 		MA = Double.parseDouble(line.substring(43, 51)); // Mean Anomaly
 		MM = Double.parseDouble(line.substring(52, 63)); // Mean Motion
-		RV = Long.parseLong(line.substring(63, 68)); // Revolution Number
+
+		String temp = line.substring(63, 68);
+		if (temp.contains(" ")) {
+			temp = line.substring(64, 68);
+		}
+		RV = Long.parseLong(temp); // Revolution Number
 		ALON = 180; // Satellite Attitude
 
 		if (DEBUG) {
@@ -814,7 +823,7 @@ public class Plan13 {
 			MM = 14.27977735;
 			M2 = 2.500E-07;
 			RV = 18818;
-			ALON = 180.0;
+			ALON = 0.0;
 		}
 	}
 
