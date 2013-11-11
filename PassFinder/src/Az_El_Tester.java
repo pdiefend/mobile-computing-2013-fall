@@ -19,8 +19,8 @@ public class Az_El_Tester {
 		Location lugar = new Location("Bucknell", 40.95530, -76.88206, 134, -5);
 
 		// Does not Work
-		// Timestamp ahora = new Timestamp(2013, 11, 12, 16, 0, 0, 0);
-		// Time.localToUniversalTime(ahora, lugar.offsetUTC);
+		Timestamp time = new Timestamp(2014, 0, 1, 0, 0, 0, 0);
+		Time.localToUniversalTime(time, lugar.offsetUTC);
 
 		// Works
 		Timestamp ahora = Time.getCurrentUniversalTime(lugar.offsetUTC);
@@ -29,9 +29,16 @@ public class Az_El_Tester {
 		iss.calcularVariables(ahora);
 		iss.calcularPosicionSatelite(lugar, ahora);
 
-		System.out.print("AZ: " + iss.azimut);
+		System.out.print("ahora: AZ: " + iss.azimut);
 		System.out.println(", EL: " + iss.elevacion);
 		// System.out.print(", Al: " + iss.altitud);
 
+		lugar.calcularVariables(time);
+		iss.calcularVariables(time);
+		iss.calcularPosicionSatelite(lugar, time);
+
+		System.out.print("time: AZ: " + iss.azimut);
+		System.out.println(", EL: " + iss.elevacion);
+		// System.out.print(", Al: " + iss.altitud);
 	}
 }
