@@ -1,27 +1,23 @@
 package sgp;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
-public class Testing
-{
-	public static void main(String[] args)
-	{
+public class Testing {
+	public static void main(String[] args) {
 		ArrayList satelites = new ArrayList();
 		ArrayList lugares = new ArrayList();
 
-		try
-		{
+		try {
 			SateliteFactory.parseTLE("c:\\PassViewJava\\sgp\\visual.tle");
 			int cuantosSat = SateliteFactory.howManySatelites();
 			Satelite s;
 			System.out.println("---------------------------------");
 			System.out.println("N�mero de sat�lites: " + cuantosSat);
 			System.out.println("---------------------------------");
-			int j=0,numeroISS=0;
-			while (SateliteFactory.hasMoreSatelites())
-			{
-				s = (Satelite)SateliteFactory.nextSatelite();
+			int j = 0, numeroISS = 0;
+			while (SateliteFactory.hasMoreSatelites()) {
+				s = (Satelite) SateliteFactory.nextSatelite();
 				if (s.nombre.startsWith("ISS (ZARYA)"))
 					numeroISS = j;
 				satelites.add(s);
@@ -35,12 +31,11 @@ public class Testing
 			Location l;
 			System.out.println("N�mero de lugares: " + cuantosLugares);
 			System.out.println("---------------------------------");
-			while (LocationFactory.hasMoreLugares())
-			{
-				l = (Location)LocationFactory.nextLugar();
+			while (LocationFactory.hasMoreLugares()) {
+				l = (Location) LocationFactory.nextLugar();
 				lugares.add(l);
 			}
-			l = (Location)lugares.get(3);
+			l = (Location) lugares.get(3);
 			// Ya tenemos lugar (Murcia)
 
 			System.out.println("Sat�lite: " + sat.nombre);
@@ -52,13 +47,13 @@ public class Testing
 			Timestamp ahora;
 			Time.setHorarioVerano(false);
 			ahora = Time.getCurrentLocalTime();
-			System.out.println("Hora local:\n\t"+ahora);
+			System.out.println("Hora local:\n\t" + ahora);
 			ahora = Time.getCurrentUniversalTime(l.offsetUTC);
-			System.out.println("Hora universal:\n\t"+ahora);
+			System.out.println("Hora universal:\n\t" + ahora);
 			double j1 = Time.timeToJulianTime(ahora);
-			System.out.println("Hora universal juliana:\n\t"+j1);
-			Time.julianTimeToTime(j1,ahora);
-			System.out.println("Hora universal:\n\t"+ahora);
+			System.out.println("Hora universal juliana:\n\t" + j1);
+			Time.julianTimeToTime(j1, ahora);
+			System.out.println("Hora universal:\n\t" + ahora);
 			System.out.println("---------------------------------");
 
 			// Lo primero es calcular la posici�n solar
@@ -76,22 +71,23 @@ public class Testing
 
 			// Ahora calculamos la posicion y velocidad del sat�lite
 			sat.calcularVariables(ahora);
-			System.out.println("Datos sobre el sat�lite "+sat.nombre+" :");
+			System.out.println("Datos sobre el sat�lite " + sat.nombre + " :");
 
-			System.out.println("\tpos[0]: "+sat.pos[0]);
-			System.out.println("\tpos[1]: "+sat.pos[1]);
-			System.out.println("\tpos[2]: "+sat.pos[2]);
-			System.out.println("\tpos[3]: "+sat.pos[3]);
-			System.out.println("\tvel[0]: "+sat.vel[0]);
-			System.out.println("\tvel[1]: "+sat.vel[1]);
-			System.out.println("\tvel[2]: "+sat.vel[2]);
-			System.out.println("\tvel[3]: "+sat.vel[3]);
+			System.out.println("\tpos[0]: " + sat.pos[0]);
+			System.out.println("\tpos[1]: " + sat.pos[1]);
+			System.out.println("\tpos[2]: " + sat.pos[2]);
+			System.out.println("\tpos[3]: " + sat.pos[3]);
+			System.out.println("\tvel[0]: " + sat.vel[0]);
+			System.out.println("\tvel[1]: " + sat.vel[1]);
+			System.out.println("\tvel[2]: " + sat.vel[2]);
+			System.out.println("\tvel[3]: " + sat.vel[3]);
 			System.out.println("\tLatitud: " + sat.latitud);
 			System.out.println("\tLongitud: " + sat.longitud);
 			System.out.println("\tAltitud: " + sat.altitud);
 			System.out.println("---------------------------------");
 
-			// Ahora tenemos que calcular el azimut y elevaci�n del sol y sat�lite
+			// Ahora tenemos que calcular el azimut y elevaci�n del sol y
+			// sat�lite
 			// respecto a la posici�n del observador
 
 			l.calcularPosicionSol(ahora);
@@ -102,24 +98,16 @@ public class Testing
 			System.out.println("\tRango sol:" + l.rangoSol);
 			System.out.println("\tRatioRango sol:" + l.ratioRangoSol);
 
-			System.out.println(""+ sat.nombre);
-			sat.calcularPosicionSatelite(l,ahora);
+			System.out.println("" + sat.nombre);
+			sat.calcularPosicionSatelite(l, ahora);
 			System.out.println("\tAzimut sat:" + sat.azimut);
 			System.out.println("\tElevacion sat:" + sat.elevacion);
 			System.out.println("\tRango sat:" + sat.rango);
 			System.out.println("\tRatioRango sat:" + sat.ratioRango);
 			System.out.println("---------------------------------");
 
-		}
-		catch (FileNotFoundException e)
-		{
+		} catch (FileNotFoundException e) {
 			System.out.println("No se encuentra el fichero.");
 		}
-
-
-
-
-
-
 	}
 }

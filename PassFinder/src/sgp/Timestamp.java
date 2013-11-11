@@ -2,17 +2,20 @@
 // Las clases de este paquete pueden acceder directamente a los atributos.
 package sgp;
 
-public class Timestamp
-{
+public class Timestamp {
 	public int yr, mo, dy, hr, mi, se, hu;
 
-	Timestamp()
-	{
-		yr=0; mo=0; dy=0; hr=0; mi=0; se=0; hu=0;
+	Timestamp() {
+		yr = 0;
+		mo = 0;
+		dy = 0;
+		hr = 0;
+		mi = 0;
+		se = 0;
+		hu = 0;
 	}
 
-	Timestamp(int yr, int mo, int dy, int hr, int mi, int se, int hu)
-	{
+	public Timestamp(int yr, int mo, int dy, int hr, int mi, int se, int hu) {
 		this.yr = yr;
 		this.mo = mo;
 		this.dy = dy;
@@ -22,8 +25,7 @@ public class Timestamp
 		this.hu = hu;
 	}
 
-	void setValues(int yr, int mo, int dy, int hr, int mi, int se, int hu)
-	{
+	void setValues(int yr, int mo, int dy, int hr, int mi, int se, int hu) {
 		this.yr = yr;
 		this.mo = mo;
 		this.dy = dy;
@@ -33,12 +35,11 @@ public class Timestamp
 		this.hu = hu;
 	}
 
-	public String toString()
-	{
-		String s = ""+yr+"-"+mo+"-"+dy+" "+hr+":"+mi+":"+se+"."+hu;
+	public String toString() {
+		String s = "" + yr + "-" + mo + "-" + dy + " " + hr + ":" + mi + ":"
+				+ se + "." + hu;
 
 		return s;
 	}
 
 }
-

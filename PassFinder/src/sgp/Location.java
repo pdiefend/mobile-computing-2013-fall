@@ -1,8 +1,7 @@
 // Clase que representa una localizaci�n en el Mundo
 package sgp;
 
-public class Location implements Comparable
-{
+public class Location implements Comparable {
 	public double azimutSol, elevacionSol, rangoSol, ratioRangoSol;
 	public String nombre;
 	public double latitud, longitud, altitud, offsetUTC;
@@ -16,67 +15,57 @@ public class Location implements Comparable
 
 	private String ficheroLOC = "";
 
-
-	public Location (String nom, double lat, double lon, double alt, double off)
-	{
+	public Location(String nom, double lat, double lon, double alt, double off) {
 		nombre = nom;
 		latitud = lat;
 		longitud = lon;
 		altitud = alt;
 		offsetUTC = off;
 		polares[0] = Math.toRadians(lat);
-		polares[1] = Math.toRadians(MathematicalFunctions.modulus(lon,360));
+		polares[1] = Math.toRadians(MathematicalFunctions.modulus(lon, 360));
 		polares[2] = alt * 0.001;
 	}
 
-	void setFicheroLOC(String fichero)
-	{
+	void setFicheroLOC(String fichero) {
 		ficheroLOC = fichero;
 	}
 
-	String getFicheroLOC()
-	{
+	String getFicheroLOC() {
 		return ficheroLOC;
 	}
 
-	void setVariables (String nom, double lat, double lon, double alt, double off)
-	{
+	void setVariables(String nom, double lat, double lon, double alt, double off) {
 		nombre = nom;
 		latitud = lat;
 		longitud = lon;
 		altitud = alt;
 		offsetUTC = off;
 		polares[0] = Math.toRadians(lat);
-		polares[1] = Math.toRadians(MathematicalFunctions.modulus(lon,360));
+		polares[1] = Math.toRadians(MathematicalFunctions.modulus(lon, 360));
 		polares[2] = alt * 0.001;
 	}
 
-	public int compareTo(Object o)
-	{
+	public int compareTo(Object o) {
 		Location l = (Location) o;
 		return nombre.compareTo(l.nombre);
 	}
 
-	boolean esDeNoche()
-	{
+	boolean esDeNoche() {
 		return (elevacionSol < twilight);
 	}
 
-	void calcularPosicionSol(Timestamp t)
-	{
+	void calcularPosicionSol(Timestamp t) {
 		calcularPosicionSol(Time.timeToJulianTime(t));
 	}
 
-	void calcularPosicionSol(double jt)
-	{
+	void calcularPosicionSol(double jt) {
 		int i;
-		double sin_lat,cos_lat, sin_theta,cos_theta;
-		double el,azim,lat,theta;
-		double top_s,top_e,top_z;
+		double sin_lat, cos_lat, sin_theta, cos_theta;
+		double el, azim, lat, theta;
+		double top_s, top_e, top_z;
 
 		calcularVariables(jt);
-		for (int n=0;n<3;n++)
-		{
+		for (int n = 0; n < 3; n++) {
 			range[n] = Sun.pos[n] - pos[n];
 			rgvel[n] = 0.0 - vel[n];
 		}
@@ -88,41 +77,41 @@ public class Location implements Comparable
 		cos_lat = Math.cos(lat);
 		sin_theta = Math.sin(theta);
 		cos_theta = Math.cos(theta);
-		top_s = sin_lat*cos_theta*range[0]
-		     + sin_lat*sin_theta*range[1]
-		     - cos_lat*range[2];
-		top_e = -sin_theta*range[0]
-		     + cos_theta*range[1];
-		top_z = cos_lat*cos_theta*range[0]
-		     + cos_lat*sin_theta*range[1]
-		     + sin_lat*range[2];
-		azim = Math.atan(-top_e/top_s); //Azimuth
+		top_s = sin_lat * cos_theta * range[0] + sin_lat * sin_theta * range[1]
+				- cos_lat * range[2];
+		top_e = -sin_theta * range[0] + cos_theta * range[1];
+		top_z = cos_lat * cos_theta * range[0] + cos_lat * sin_theta * range[1]
+				+ sin_lat * range[2];
+		azim = Math.atan(-top_e / top_s); // Azimuth
 		if (top_s > 0)
 			azim = azim + Math.PI;
 		if (azim < 0)
-			azim = azim + (Math.PI*2.0);
-		el = Math.asin(top_z/range[3]);
-		azimutSol = Math.toDegrees(azim);  //Azimuth (radians to degrees)
-		elevacionSol = el; //Elevation (radians)
-		rangoSol = range[3];  //Range (kilometers)
-		ratioRangoSol = MathematicalFunctions.dot(range,rgvel)/range[3]; //Range Rate (kilometers/second)
+			azim = azim + (Math.PI * 2.0);
+		el = Math.asin(top_z / range[3]);
+		azimutSol = Math.toDegrees(azim); // Azimuth (radians to degrees)
+		elevacionSol = el; // Elevation (radians)
+		rangoSol = range[3]; // Range (kilometers)
+		ratioRangoSol = MathematicalFunctions.dot(range, rgvel) / range[3]; // Range
+																			// Rate
+																			// (kilometers/second)
 		// Corrections for atmospheric refraction }
-		// Reference:  Astronomical Algorithms by Jean Meeus, pp. 101-104 }
-		// Note:  Correction is meaningless when apparent elevation is below horizon }
-		elevacionSol = elevacionSol + Math.toRadians((1.02/Math.tan(Math.toRadians(Math.toDegrees(el)+10.3/(Math.toDegrees(el)+5.11))))/60.0);
+		// Reference: Astronomical Algorithms by Jean Meeus, pp. 101-104 }
+		// Note: Correction is meaningless when apparent elevation is below
+		// horizon }
+		elevacionSol = elevacionSol
+				+ Math.toRadians((1.02 / Math.tan(Math.toRadians(Math
+						.toDegrees(el) + 10.3 / (Math.toDegrees(el) + 5.11)))) / 60.0);
 		if (elevacionSol < 0)
-			elevacionSol = el;  //Reset to true elevation
+			elevacionSol = el; // Reset to true elevation
 		elevacionSol = Math.toDegrees(elevacionSol);
 	}
 
-	void calcularVariables(Timestamp t)
-	{
+	public void calcularVariables(Timestamp t) {
 		calcularVariables(Time.timeToJulianTime(t));
 	}
 
-	void calcularVariables(double jt)
-	{
-		double c,s,achcp;
+	void calcularVariables(double jt) {
+		double c, s, achcp;
 		double lat, lon, alt, theta;
 
 		lat = polares[0];
@@ -130,17 +119,19 @@ public class Location implements Comparable
 		alt = polares[2];
 
 		// LMST
-		theta = MathematicalFunctions.modulus(Time.thetaG_JD(jt) + lon,(Math.PI*2));
-	  	polares[3]=theta;
-		c = 1.0/Math.sqrt(1.0 + Constants.f*(Constants.f - 2.0)*Math.pow(Math.sin(lat),2.0));
-		s = ((1 - Constants.f)*(1 - Constants.f))*c;
-		achcp = (Constants.xkmper*c + alt)*Math.cos(lat);
-		pos[0] = achcp*Math.cos(theta);  // kilometros
-		pos[1] = achcp*Math.sin(theta);
-		pos[2] = (Constants.xkmper*s + alt)*Math.sin(lat);
-		vel[0] = -Constants.mfactor*pos[1]; //kilometers/second
-		vel[1] =  Constants.mfactor*pos[0];
-		vel[2] =  0;
+		theta = MathematicalFunctions.modulus(Time.thetaG_JD(jt) + lon,
+				(Math.PI * 2));
+		polares[3] = theta;
+		c = 1.0 / Math.sqrt(1.0 + Constants.f * (Constants.f - 2.0)
+				* Math.pow(Math.sin(lat), 2.0));
+		s = ((1 - Constants.f) * (1 - Constants.f)) * c;
+		achcp = (Constants.xkmper * c + alt) * Math.cos(lat);
+		pos[0] = achcp * Math.cos(theta); // kilometros
+		pos[1] = achcp * Math.sin(theta);
+		pos[2] = (Constants.xkmper * s + alt) * Math.sin(lat);
+		vel[0] = -Constants.mfactor * pos[1]; // kilometers/second
+		vel[1] = Constants.mfactor * pos[0];
+		vel[2] = 0;
 
 		MathematicalFunctions.magnitud(pos);
 		MathematicalFunctions.magnitud(vel);
