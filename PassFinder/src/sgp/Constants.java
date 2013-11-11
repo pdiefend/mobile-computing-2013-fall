@@ -1,22 +1,22 @@
-// Constantes más utilizadas por las clases del paquete
-// Clase estática que concentra todas las constantes
+// Constantes mï¿½s utilizadas por las clases del paquete
+// Clase estï¿½tica que concentra todas las constantes
 package sgp;
 
-class Cte
+class Constants
 {
 	final static double ae = 1.0;
 	final static double tothrd = 2.0/3.0;
-	// Radio ecuatorial de la tierra en kilómetros
+	// Radio ecuatorial de la tierra en kilï¿½metros
 	final static double xkmper = 6378.135;
 	// Achatamiento de la tierra
 	final static double f = 1.0/298.26;
 	// Constante gravitacional de la tierra
 	final static double ge = 398600.8;
-	// Armónico J2
+	// Armï¿½nico J2
 	final static double J2 = 1.0826158e-3;
-	// Armónico J3
+	// Armï¿½nico J3
 	final static double J3 = -2.53881e-6;
-	// Armónico J4
+	// Armï¿½nico J4
 	final static double J4 = -1.65597e-6;
 	final static double ck2 = J2/2.0;
 	final static double ck4 = -3.0*J4/8.0;
@@ -24,21 +24,21 @@ class Cte
 	final static double qo = ae + (120.0/xkmper);
 	final static double s = ae + (78/xkmper);
 	final static double e6a = 1e-6;
-	// Código de inialización del modelo Deep-Space
+	// Cï¿½digo de inializaciï¿½n del modelo Deep-Space
 	final static int dpinit = 1;
-	// Código secular del modelo Deep-Space
+	// Cï¿½digo secular del modelo Deep-Space
 	final static int dpsec = 2;
-	// Código periódico del modelo Deep-Space
+	// Cï¿½digo periï¿½dico del modelo Deep-Space
 	final static int dpper = 3;
-	// Radio solar en kilómetros
+	// Radio solar en kilï¿½metros
 	final static double sr = 696000.0;
-	// Unidad Astronómica (distancia de la Tierra al Sol en kilómetros)
+	// Unidad Astronï¿½mica (distancia de la Tierra al Sol en kilï¿½metros)
 	final static double AU = 1.49597870e8;
 	// Minutos por dia
 	final static double xmnpda = 1440.0;
 	// Segundos por dia
 	final static double secday = 86400.0;
-	// Rotaciones de la tierra por día sideral (no-constante)
+	// Rotaciones de la tierra por dï¿½a sideral (no-constante)
 	final static double omega_E = 1.00273790934;
 	// Rotacion de la tierra, radianes por dia sideral
 	final static double omega_ER = omega_E*(Math.PI*2.0);

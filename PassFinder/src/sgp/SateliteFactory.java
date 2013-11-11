@@ -1,10 +1,10 @@
-// Clase estática que obtiene los satélites de archivos .tle obtenidos de internet
+// Clase estï¿½tica que obtiene los satï¿½lites de archivos .tle obtenidos de internet
 package sgp;
 
 import java.util.*;
 import java.io.*;
 
-class FactoriaSatelites{
+class SateliteFactory{
 	private static ArrayList satelites = new ArrayList();;
 
 	static void parseTLE(String archivoTLE) throws FileNotFoundException

@@ -3,7 +3,7 @@ package sgp;
 import java.io.*;
 import java.util.*;
 
-public class Pruebas
+public class Testing
 {
 	public static void main(String[] args)
 	{
@@ -12,16 +12,16 @@ public class Pruebas
 
 		try
 		{
-			FactoriaSatelites.parseTLE("c:\\PassViewJava\\sgp\\visual.tle");
-			int cuantosSat = FactoriaSatelites.howManySatelites();
+			SateliteFactory.parseTLE("c:\\PassViewJava\\sgp\\visual.tle");
+			int cuantosSat = SateliteFactory.howManySatelites();
 			Satelite s;
 			System.out.println("---------------------------------");
-			System.out.println("Número de satélites: " + cuantosSat);
+			System.out.println("Nï¿½mero de satï¿½lites: " + cuantosSat);
 			System.out.println("---------------------------------");
 			int j=0,numeroISS=0;
-			while (FactoriaSatelites.hasMoreSatelites())
+			while (SateliteFactory.hasMoreSatelites())
 			{
-				s = (Satelite)FactoriaSatelites.nextSatelite();
+				s = (Satelite)SateliteFactory.nextSatelite();
 				if (s.nombre.startsWith("ISS (ZARYA)"))
 					numeroISS = j;
 				satelites.add(s);
@@ -30,53 +30,53 @@ public class Pruebas
 			Satelite sat = (Satelite) satelites.get(numeroISS);
 			// Ya tenemos la ISS seleccionada
 
-			FactoriaLugares.parseLOC("c:\\PassViewJava\\sgp\\spain.loc");
-			int cuantosLugares = FactoriaLugares.howManyLugares();
-			Lugar l;
-			System.out.println("Número de lugares: " + cuantosLugares);
+			LocationFactory.parseLOC("c:\\PassViewJava\\sgp\\spain.loc");
+			int cuantosLugares = LocationFactory.howManyLugares();
+			Location l;
+			System.out.println("Nï¿½mero de lugares: " + cuantosLugares);
 			System.out.println("---------------------------------");
-			while (FactoriaLugares.hasMoreLugares())
+			while (LocationFactory.hasMoreLugares())
 			{
-				l = (Lugar)FactoriaLugares.nextLugar();
+				l = (Location)LocationFactory.nextLugar();
 				lugares.add(l);
 			}
-			l = (Lugar)lugares.get(3);
+			l = (Location)lugares.get(3);
 			// Ya tenemos lugar (Murcia)
 
-			System.out.println("Satélite: " + sat.nombre);
+			System.out.println("Satï¿½lite: " + sat.nombre);
 			System.out.println("Lugar: " + l.nombre);
 
 			System.out.println("---------------------------------");
 
 			// Miramos la hora local y universal
-			MarcaDeTiempo ahora;
-			Tiempo.setHorarioVerano(false);
-			ahora = Tiempo.getCurrentLocalTime();
+			Timestamp ahora;
+			Time.setHorarioVerano(false);
+			ahora = Time.getCurrentLocalTime();
 			System.out.println("Hora local:\n\t"+ahora);
-			ahora = Tiempo.getCurrentUniversalTime(l.offsetUTC);
+			ahora = Time.getCurrentUniversalTime(l.offsetUTC);
 			System.out.println("Hora universal:\n\t"+ahora);
-			double j1 = Tiempo.timeToJulianTime(ahora);
+			double j1 = Time.timeToJulianTime(ahora);
 			System.out.println("Hora universal juliana:\n\t"+j1);
-			Tiempo.julianTimeToTime(j1,ahora);
+			Time.julianTimeToTime(j1,ahora);
 			System.out.println("Hora universal:\n\t"+ahora);
 			System.out.println("---------------------------------");
 
-			// Lo primero es calcular la posición solar
-			Sol.calcularPosicion(ahora); // ahora tiene que ser universal
+			// Lo primero es calcular la posiciï¿½n solar
+			Sun.calcularPosicion(ahora); // ahora tiene que ser universal
 
 			System.out.println("Datos sobre el sol");
-			System.out.println("\tpos[0]: " + Sol.pos[0]);
-			System.out.println("\tpos[1]: " + Sol.pos[1]);
-			System.out.println("\tpos[2]: " + Sol.pos[2]);
-			System.out.println("\tpos[3]: " + Sol.pos[3]);
-			System.out.println("\tLatitud: " + Sol.latitud);
-			System.out.println("\tlongitud: " + Sol.longitud);
-			System.out.println("\tAltitud: " + Sol.altitud);
+			System.out.println("\tpos[0]: " + Sun.pos[0]);
+			System.out.println("\tpos[1]: " + Sun.pos[1]);
+			System.out.println("\tpos[2]: " + Sun.pos[2]);
+			System.out.println("\tpos[3]: " + Sun.pos[3]);
+			System.out.println("\tLatitud: " + Sun.latitud);
+			System.out.println("\tlongitud: " + Sun.longitud);
+			System.out.println("\tAltitud: " + Sun.altitud);
 			System.out.println("---------------------------------");
 
-			// Ahora calculamos la posicion y velocidad del satélite
+			// Ahora calculamos la posicion y velocidad del satï¿½lite
 			sat.calcularVariables(ahora);
-			System.out.println("Datos sobre el satélite "+sat.nombre+" :");
+			System.out.println("Datos sobre el satï¿½lite "+sat.nombre+" :");
 
 			System.out.println("\tpos[0]: "+sat.pos[0]);
 			System.out.println("\tpos[1]: "+sat.pos[1]);
@@ -91,8 +91,8 @@ public class Pruebas
 			System.out.println("\tAltitud: " + sat.altitud);
 			System.out.println("---------------------------------");
 
-			// Ahora tenemos que calcular el azimut y elevación del sol y satélite
-			// respecto a la posición del observador
+			// Ahora tenemos que calcular el azimut y elevaciï¿½n del sol y satï¿½lite
+			// respecto a la posiciï¿½n del observador
 
 			l.calcularPosicionSol(ahora);
 			System.out.println("Datos relativos al observador:");

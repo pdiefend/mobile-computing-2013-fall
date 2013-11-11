@@ -1,17 +1,17 @@
-// Clase que representa un instante de tiempo dado, con precisión de milisegundos.
+// Clase que representa un instante de tiempo dado, con precisiï¿½n de milisegundos.
 // Las clases de este paquete pueden acceder directamente a los atributos.
 package sgp;
 
-public class MarcaDeTiempo
+public class Timestamp
 {
 	public int yr, mo, dy, hr, mi, se, hu;
 
-	MarcaDeTiempo()
+	Timestamp()
 	{
 		yr=0; mo=0; dy=0; hr=0; mi=0; se=0; hu=0;
 	}
 
-	MarcaDeTiempo(int yr, int mo, int dy, int hr, int mi, int se, int hu)
+	Timestamp(int yr, int mo, int dy, int hr, int mi, int se, int hu)
 	{
 		this.yr = yr;
 		this.mo = mo;

@@ -1,10 +1,10 @@
-// Clase estática que permite recuperar los lugares a partir de un fichero .loc
+// Clase estï¿½tica que permite recuperar los lugares a partir de un fichero .loc
 package sgp;
 
 import java.util.*;
 import java.io.*;
 
-class FactoriaLugares{
+class LocationFactory{
 	private static ArrayList lugares = new ArrayList();
 
 	static void parseLOC(String archivoLugares) throws FileNotFoundException
@@ -28,7 +28,7 @@ class FactoriaLugares{
 						longitud = Double.parseDouble(st.nextToken());
 						altitud = Double.parseDouble(st.nextToken());
 						offset = Double.parseDouble(st.nextToken());
-						Lugar lugar = new Lugar(nombre,latitud,longitud,altitud,offset);
+						Location lugar = new Location(nombre,latitud,longitud,altitud,offset);
 						lugar.setFicheroLOC(archivoLugares);
 						lugares.add(lugar);
 					}
@@ -64,11 +64,11 @@ class FactoriaLugares{
 			return true;
 	}
 
-	static Lugar nextLugar()
+	static Location nextLugar()
 	{
 		try
 		{
-			Lugar loc = (Lugar) lugares.get(0);
+			Location loc = (Location) lugares.get(0);
 			lugares.remove(0);
 
 			return loc;
@@ -84,7 +84,7 @@ class FactoriaLugares{
 		return lugares.size();
 	}
 
-	static void addLugarFicheroLOC(String fichero, Lugar lugar)
+	static void addLugarFicheroLOC(String fichero, Location lugar)
 	{
 
 		try
@@ -135,7 +135,7 @@ class FactoriaLugares{
 
 	}
 
-	static void eliminarLugarFicheroLOC(Lugar lugar)
+	static void eliminarLugarFicheroLOC(Location lugar)
 	{
 		String fichero = lugar.getFicheroLOC();
 

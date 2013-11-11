@@ -7,7 +7,7 @@ import java.net.*;
 public class PassView {
 
   private static Satelite satelite = null;
-  private static Lugar lugar = null;
+  private static Location lugar = null;
   private static boolean forzarActualizacionTLE = false;
 
   public static boolean setLugar(String nombre, String lat, String lon, String alt,
@@ -18,7 +18,7 @@ public class PassView {
       longitud = Double.parseDouble(lon);
       altitud = Double.parseDouble(alt);
       offset = Double.parseDouble(diffHoraria);
-      lugar = new Lugar(nombre, latitud, longitud, altitud, offset);
+      lugar = new Location(nombre, latitud, longitud, altitud, offset);
     }
     catch (Exception e) {
       return false;
@@ -89,7 +89,7 @@ public class PassView {
 
   }
 
-  public static Lugar getLugar(){
+  public static Location getLugar(){
     return lugar;
   }
 
@@ -100,9 +100,9 @@ public class PassView {
     if (satelite == null)
       return null;
 
-    MarcaDeTiempo ahora;
-    ahora = Tiempo.getCurrentUniversalTime(lugar.offsetUTC);
-    Sol.calcularPosicion(ahora);
+    Timestamp ahora;
+    ahora = Time.getCurrentUniversalTime(lugar.offsetUTC);
+    Sun.calcularPosicion(ahora);
     lugar.calcularPosicionSol(ahora);
     satelite.calcularVariables(ahora);
     satelite.calcularPosicionSatelite(lugar, ahora);
@@ -117,9 +117,9 @@ public class PassView {
     if (satelite == null)
       return null;
 
-    MarcaDeTiempo mt = new MarcaDeTiempo();
+    Timestamp mt = new Timestamp();
 
-    Sol.calcularPosicion(tiempo);
+    Sun.calcularPosicion(tiempo);
     lugar.calcularPosicionSol(tiempo);
     satelite.calcularVariables(tiempo);
     satelite.calcularPosicionSatelite(lugar, tiempo);
@@ -130,7 +130,7 @@ public class PassView {
 
   public static ArrayList getAvistamientos(double dias) {
     double step = 1.15740722960440E-5 * 30.0; // 30 segundos
-    double tiempo = Tiempo.getCurrentUniversalJulianTime(lugar.offsetUTC);
+    double tiempo = Time.getCurrentUniversalJulianTime(lugar.offsetUTC);
     double limite = tiempo + (step * 2.0 * 60.0 * 24.0 * dias);
     ArrayList avistamientos = new ArrayList();
 
@@ -148,9 +148,9 @@ public class PassView {
 
         // Comprobamos si hemos llegado al limite
         if (tiempo >= limite)
-          return avistamientos; // No buscamos más.
+          return avistamientos; // No buscamos mï¿½s.
 
-        Avistamiento a = new Avistamiento();
+        Sighting a = new Sighting();
         // Guardamos el inicio de la iluminacion
         a.inicioLuz = (Satelite) sat.clone();
         // Guardamos la marca de tiempo
@@ -165,7 +165,7 @@ public class PassView {
         // Adelantamos un paso
         tiempo = tiempo + step;
         sat = getSatelite(tiempo);
-        // Guardamos la aparición por el horizonte
+        // Guardamos la apariciï¿½n por el horizonte
         a.inicio = (Satelite) sat.clone();
         // Recuperamos la marca de tiempo guardada
         tiempo = temp;
@@ -198,9 +198,9 @@ public class PassView {
           tiempo = tiempo + step;
         }
 
-        // Guardamos el fin de la iluminación
+        // Guardamos el fin de la iluminaciï¿½n
         a.finLuz = (Satelite) sat.clone();
-        // Mientras esté sobre el horizonte, avanzar en el tiempo
+        // Mientras estï¿½ sobre el horizonte, avanzar en el tiempo
         while (sat.elevacion > 0) {
           tiempo = tiempo + step;
           sat = getSatelite(tiempo);

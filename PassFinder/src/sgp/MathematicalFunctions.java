@@ -1,8 +1,8 @@
-// Clase estática que aglutina gran parte de las funciones matemáticas usadas
+// Clase estï¿½tica que aglutina gran parte de las funciones matemï¿½ticas usadas
 // por las clases de este paquete.
 package sgp;
 
-class FuncionesMatematicas
+class MathematicalFunctions
 {
 	static double modulus(double d1,double d2)
 	{
@@ -48,7 +48,7 @@ class FuncionesMatematicas
 	{
 		for (int i = 0;i<3;i++)
 			v3[i] = v1[i] - v2[i];
-  		FuncionesMatematicas.magnitud(v3);
+  		MathematicalFunctions.magnitud(v3);
 	}
 
 
@@ -63,8 +63,8 @@ class FuncionesMatematicas
 	// Calcula el angulo comprendido entre los vectores v1 y v2
 	static double angulo(double[] v1, double[] v2)
 	{
-		FuncionesMatematicas.magnitud(v1);
-		FuncionesMatematicas.magnitud(v2);
+		MathematicalFunctions.magnitud(v1);
+		MathematicalFunctions.magnitud(v2);
 		return Math.acos(dot(v1,v2)/(v1[3]*v2[3]));
 	}
 

@@ -2,7 +2,7 @@ package sgp;
 
 import java.text.*;
 
-public class Avistamiento {
+public class Sighting {
   public Satelite
       inicio=null,
       inicioLuz=null,
@@ -25,11 +25,11 @@ public class Avistamiento {
   }
 
   public String toHtml(){
-    Tiempo.universalToLocalTime(inicio.marcaDeTiempo,offsetUTC);
-    Tiempo.universalToLocalTime(inicioLuz.marcaDeTiempo,offsetUTC);
-    Tiempo.universalToLocalTime(fin.marcaDeTiempo,offsetUTC);
-    Tiempo.universalToLocalTime(finLuz.marcaDeTiempo,offsetUTC);
-    Tiempo.universalToLocalTime(maximaElevacion.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(inicio.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(inicioLuz.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(fin.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(finLuz.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(maximaElevacion.marcaDeTiempo,offsetUTC);
 
     String fecha = "" + dd(inicio.marcaDeTiempo.dy) +
         "/" + dd((inicio.marcaDeTiempo.mo+1)) +
@@ -55,11 +55,11 @@ public class Avistamiento {
 
 
   public String toString(){
-    Tiempo.universalToLocalTime(inicio.marcaDeTiempo,offsetUTC);
-    Tiempo.universalToLocalTime(inicioLuz.marcaDeTiempo,offsetUTC);
-    Tiempo.universalToLocalTime(fin.marcaDeTiempo,offsetUTC);
-    Tiempo.universalToLocalTime(finLuz.marcaDeTiempo,offsetUTC);
-    Tiempo.universalToLocalTime(maximaElevacion.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(inicio.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(inicioLuz.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(fin.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(finLuz.marcaDeTiempo,offsetUTC);
+    Time.universalToLocalTime(maximaElevacion.marcaDeTiempo,offsetUTC);
 
     String fecha = "" + dd(inicio.marcaDeTiempo.dy) +
         "/" + dd((inicio.marcaDeTiempo.mo+1)) +
