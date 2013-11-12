@@ -18,8 +18,11 @@ public class Az_El_Tester {
 
 		Location lugar = new Location("Bucknell", 40.95530, -76.88206, 134, -5);
 
-		// Does not Work
-		Timestamp time = new Timestamp(2014, 0, 1, 0, 0, 0, 0);
+		// Works Note that month is offset by one (month = month - 1)
+		// (Nov: 11 - 1 = 10) but nothing else... WTF
+		// This is a passing on Nov 16, 2013 at 5:59:55 (my) local time
+		// confirmed against heavens-above.com
+		Timestamp time = new Timestamp(2013, 10, 16, 5, 59, 55, 0);
 		Time.localToUniversalTime(time, lugar.offsetUTC);
 
 		// Works
@@ -29,7 +32,8 @@ public class Az_El_Tester {
 		iss.calcularVariables(ahora);
 		iss.calcularPosicionSatelite(lugar, ahora);
 
-		System.out.print("ahora: AZ: " + iss.azimut);
+		System.out.println(ahora);
+		System.out.print("AZ: " + iss.azimut);
 		System.out.println(", EL: " + iss.elevacion);
 		// System.out.print(", Al: " + iss.altitud);
 
@@ -37,6 +41,7 @@ public class Az_El_Tester {
 		iss.calcularVariables(time);
 		iss.calcularPosicionSatelite(lugar, time);
 
+		System.out.println(time);
 		System.out.print("time: AZ: " + iss.azimut);
 		System.out.println(", EL: " + iss.elevacion);
 		// System.out.print(", Al: " + iss.altitud);
