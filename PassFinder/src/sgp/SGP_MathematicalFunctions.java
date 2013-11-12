@@ -2,7 +2,7 @@
 // por las clases de este paquete.
 package sgp;
 
-class MathematicalFunctions
+class SGP_MathematicalFunctions
 {
 	static double modulus(double d1,double d2)
 	{
@@ -48,7 +48,7 @@ class MathematicalFunctions
 	{
 		for (int i = 0;i<3;i++)
 			v3[i] = v1[i] - v2[i];
-  		MathematicalFunctions.magnitud(v3);
+  		SGP_MathematicalFunctions.magnitud(v3);
 	}
 
 
@@ -63,8 +63,8 @@ class MathematicalFunctions
 	// Calcula el angulo comprendido entre los vectores v1 y v2
 	static double angulo(double[] v1, double[] v2)
 	{
-		MathematicalFunctions.magnitud(v1);
-		MathematicalFunctions.magnitud(v2);
+		SGP_MathematicalFunctions.magnitud(v1);
+		SGP_MathematicalFunctions.magnitud(v2);
 		return Math.acos(dot(v1,v2)/(v1[3]*v2[3]));
 	}
 

@@ -16,7 +16,7 @@ package sgp;
  * 
  */
 
-public class TLE {
+public class SGP_TLE {
 	/** Name of the satellite */
 	private String satelliteName;
 
@@ -36,7 +36,7 @@ public class TLE {
 	 * @param line2
 	 *            Second Line of the TLE
 	 */
-	public TLE(String name, String line1, String line2) {
+	public SGP_TLE(String name, String line1, String line2) {
 		satelliteName = name;
 		line1TLE = line1;
 		line2TLE = line2;

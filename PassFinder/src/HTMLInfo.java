@@ -14,7 +14,7 @@ public class HTMLInfo {
 
   }
 
-  public static void localidad(Location loc){
+  public static void localidad(SGP_Location loc){
     System.out.print("<h2>Datos de la localidad de "+loc.nombre+"</h2>\n");
     System.out.print("<dir>\n");
     System.out.print("Latitud  = "+loc.latitud+"� N<br>\n");
@@ -56,7 +56,7 @@ public class HTMLInfo {
       if (a.size() > 0) {
         Iterator it = a.iterator();
         while (it.hasNext()) {
-          Sighting avist = (Sighting) it.next();
+          SGP_Sighting avist = (SGP_Sighting) it.next();
           // Solo imprimimos aquellas que pasen de un umbral de m�xima elevaci�n m�nima
           if (avist.maximaElevacion.elevacion > elev_max)
             System.out.println(avist.toHtml());

@@ -18,7 +18,7 @@ import java.util.Calendar;
  * 
  */
 
-public class Time {
+public class SGP_Time {
 	/**
 	 * Estamos o no estamos en horario de verano, que se aplica en Europa
 	 * adelantando una hora durante los meses estivales Por defecto no estamos
@@ -27,10 +27,10 @@ public class Time {
 	private static boolean horarioVerano = false;
 
 	/** Clase Calendar del que obtenemos la fecha y hora del sistema */
-	private static Calendar cal = Calendario.getInstance();
+	private static Calendar cal = SGP_Calendario.getInstance();
 
 	/** Marca de tiempo de uso temporal */
-	private static Timestamp currentTime = new Timestamp();
+	private static SGP_Timestamp currentTime = new SGP_Timestamp();
 
 	/** Usada para c�lculos internos */
 	private static double ds50;
@@ -64,8 +64,8 @@ public class Time {
 	 *         1970
 	 * 
 	 */
-	public static Timestamp zeroTime() {
-		return new Timestamp();
+	public static SGP_Timestamp zeroTime() {
+		return new SGP_Timestamp();
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class Time {
 	 * @return Marca de tiempo con la fecha y hora actuales.
 	 * 
 	 */
-	public static Timestamp getCurrentLocalTime() {
+	public static SGP_Timestamp getCurrentLocalTime() {
 		cal.setTimeInMillis(System.currentTimeMillis());
 		currentTime.setValues(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
 				cal.get(Calendar.DATE), cal.get(Calendar.HOUR_OF_DAY),
@@ -93,9 +93,9 @@ public class Time {
 	 * @param offset
 	 *            Horas de diferencia entre la hora local y la universal (UTC).
 	 * @return Marca de tiempo con la fecha y hora universal.
-	 * @see #localToUniversalTime(Timestamp,double)
+	 * @see #localToUniversalTime(SGP_Timestamp,double)
 	 */
-	public static Timestamp getCurrentUniversalTime(double offset) {
+	public static SGP_Timestamp getCurrentUniversalTime(double offset) {
 		getCurrentLocalTime();
 		localToUniversalTime(currentTime, offset);
 		return currentTime;
@@ -106,7 +106,7 @@ public class Time {
 	 * del sistema, pero en formato Juliano, es decir, como un n�mero real.
 	 * 
 	 * @return Real con la fecha y hora actuales en formato Juliano.
-	 * @see #timeToJulianTime(Timestamp)
+	 * @see #timeToJulianTime(SGP_Timestamp)
 	 */
 	public static double getCurrentLocalJulianTime() {
 		cal.setTimeInMillis(System.currentTimeMillis());
@@ -115,7 +115,7 @@ public class Time {
 				cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND),
 				cal.get(Calendar.MILLISECOND));
 
-		return Time.timeToJulianTime(currentTime);
+		return SGP_Time.timeToJulianTime(currentTime);
 	}
 
 	/**
@@ -126,13 +126,13 @@ public class Time {
 	 * @param offset
 	 *            Horas de diferencia entre la hora local y la universal (UTC).
 	 * @return Real con la fecha y hora universal en formato Juliano.
-	 * @see #timeToJulianTime(Timestamp)
-	 * @see #localToUniversalTime(Timestamp,double)
+	 * @see #timeToJulianTime(SGP_Timestamp)
+	 * @see #localToUniversalTime(SGP_Timestamp,double)
 	 */
 	public static double getCurrentUniversalJulianTime(double offset) {
 		getCurrentLocalTime();
 		localToUniversalTime(currentTime, offset);
-		return Time.timeToJulianTime(currentTime);
+		return SGP_Time.timeToJulianTime(currentTime);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class Time {
 	 * @return Real en el intervalo [0..1)
 	 * 
 	 */
-	public static double timeToJulianTime(Timestamp t) {
+	public static double timeToJulianTime(SGP_Timestamp t) {
 		return julianDateOfYear(t.yr) + dayOfYear(t.yr, t.mo, t.dy)
 				+ fractionOfDay(t.hr, t.mi, t.se, t.hu);
 	}
@@ -173,7 +173,7 @@ public class Time {
 	 *            Marca de tiempo a que se obtiene.
 	 * 
 	 */
-	public static void julianTimeToTime(double jd, Timestamp t) {
+	public static void julianTimeToTime(double jd, SGP_Timestamp t) {
 		calendarDate(jd, t, 3);
 		timeOfDay(jd, t, 3);
 	}
@@ -188,9 +188,9 @@ public class Time {
 	 * @return Marca de tiempo corregida.
 	 * 
 	 */
-	public static Timestamp checkDate(Timestamp d) {
+	public static SGP_Timestamp checkDate(SGP_Timestamp d) {
 		double jt;
-		Timestamp t = new Timestamp();
+		SGP_Timestamp t = new SGP_Timestamp();
 
 		jt = timeToJulianTime(d);
 		julianTimeToTime(jt, t);
@@ -210,7 +210,7 @@ public class Time {
 	 *            Desplazamiento horario en horas.
 	 * 
 	 */
-	public static void localToUniversalTime(Timestamp t, double offsetUTC) {
+	public static void localToUniversalTime(SGP_Timestamp t, double offsetUTC) {
 		double jt = timeToJulianTime(t);
 
 		jt = jt - (offsetUTC / 24.0);
@@ -254,7 +254,7 @@ public class Time {
 	 *            Desplazamiento horario en horas.
 	 * 
 	 */
-	public static void universalToLocalTime(Timestamp ts, double offsetUTC) {
+	public static void universalToLocalTime(SGP_Timestamp ts, double offsetUTC) {
 		double jt;
 
 		jt = timeToJulianTime(ts);
@@ -387,12 +387,12 @@ public class Time {
 	 *            usar.
 	 * 
 	 */
-	static void calendarDate(double jd, Timestamp t, double res) {
+	static void calendarDate(double jd, SGP_Timestamp t, double res) {
 		long Z;
 		int month, day, year;
 		double A, B, C, D, E, F, alpha, factor;
 
-		factor = 0.5 / Constants.secday / Math.pow(10.0, res);
+		factor = 0.5 / SGP_Constants.secday / Math.pow(10.0, res);
 		F = (jd + 0.5) - Math.floor(jd + 0.5);
 		if (F + factor >= 1.0) {
 			jd = jd + factor;
@@ -438,7 +438,7 @@ public class Time {
 	static double epochTime(double jd) {
 		int year, mo, dy;
 		double yr, time;
-		Timestamp d = new Timestamp();
+		SGP_Timestamp d = new SGP_Timestamp();
 
 		calendarDate(jd, d, 3.0);
 		year = d.yr;
@@ -466,13 +466,13 @@ public class Time {
 	 *            usar.
 	 * 
 	 */
-	static void timeOfDay(double jd, Timestamp t, double res) {
+	static void timeOfDay(double jd, SGP_Timestamp t, double res) {
 		int hr, mn, sec, hu;
 		double factor, time, sc;
 
 		res = Math.min(Math.max(0.0, res), 3.0);
 		factor = Math.pow(10.0, res);
-		time = ((jd - 0.5) - Math.floor(jd - 0.5)) * Constants.secday;
+		time = ((jd - 0.5) - Math.floor(jd - 0.5)) * SGP_Constants.secday;
 		time = Math.rint(time * factor) / factor;
 		hr = (int) Math.round(Math.floor(time / 3600.0));
 		time = time - (3600.0 * hr);
@@ -532,9 +532,9 @@ public class Time {
 		jd = julianDateOfYear(year) + day;
 		TU = (jd - 2451545.0) / 36525;
 		GMST = 24110.54841 + (TU * (8640184.812866 + (TU * (0.093104 - (TU * 6.2e-6)))));
-		GMST = MathematicalFunctions.modulus(GMST
-				+ (Constants.secday * Constants.omega_E * UT), Constants.secday);
-		result = (Math.PI * 2.0) * GMST / Constants.secday;
+		GMST = SGP_MathematicalFunctions.modulus(GMST
+				+ (SGP_Constants.secday * SGP_Constants.omega_E * UT), SGP_Constants.secday);
+		result = (Math.PI * 2.0) * GMST / SGP_Constants.secday;
 		ds50 = jd - 2433281.5 + UT;
 
 		/*
@@ -566,9 +566,9 @@ public class Time {
 		TU = (jd - 2451545.0) / 36525;
 		GMST = 24110.54841 + TU
 				* (8640184.812866 + TU * (0.093104 - TU * 6.2e-6));
-		GMST = MathematicalFunctions.modulus(GMST + Constants.secday * Constants.omega_E
-				* UT, Constants.secday);
-		return ((Math.PI * 2.0) * GMST / Constants.secday);
+		GMST = SGP_MathematicalFunctions.modulus(GMST + SGP_Constants.secday * SGP_Constants.omega_E
+				* UT, SGP_Constants.secday);
+		return ((Math.PI * 2.0) * GMST / SGP_Constants.secday);
 	}
 
 	/**

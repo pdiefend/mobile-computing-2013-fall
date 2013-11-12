@@ -2,7 +2,7 @@
 // Clase est�tica que concentra todas las constantes
 package sgp;
 
-class Constants
+class SGP_Constants
 {
 	final static double ae = 1.0;
 	final static double tothrd = 2.0/3.0;

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class SateliteFactory {
+class SGP_SateliteFactory {
 	private static ArrayList satelites = new ArrayList();;
 
 	static void parseTLE(String archivoTLE) throws FileNotFoundException {
@@ -28,7 +28,7 @@ class SateliteFactory {
 				linea2 = br.readLine();
 				if (linea2 == null)
 					break;
-				satelites.add(new Satelite(new TLE(nombre, linea1, linea2)));
+				satelites.add(new SGP_Satelite(new SGP_TLE(nombre, linea1, linea2)));
 			} while (true);
 			br.close();
 			fr.close();
@@ -49,9 +49,9 @@ class SateliteFactory {
 			return true;
 	}
 
-	static Satelite nextSatelite() {
+	static SGP_Satelite nextSatelite() {
 		try {
-			Satelite sat = (Satelite) satelites.get(0);
+			SGP_Satelite sat = (SGP_Satelite) satelites.get(0);
 			satelites.remove(0);
 
 			return sat;

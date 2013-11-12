@@ -4,10 +4,10 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-public class PassView {
+public class SGP_PassView {
 
-  private static Satelite satelite = null;
-  private static Location lugar = null;
+  private static SGP_Satelite satelite = null;
+  private static SGP_Location lugar = null;
   private static boolean forzarActualizacionTLE = false;
 
   public static boolean setLugar(String nombre, String lat, String lon, String alt,
@@ -18,7 +18,7 @@ public class PassView {
       longitud = Double.parseDouble(lon);
       altitud = Double.parseDouble(alt);
       offset = Double.parseDouble(diffHoraria);
-      lugar = new Location(nombre, latitud, longitud, altitud, offset);
+      lugar = new SGP_Location(nombre, latitud, longitud, altitud, offset);
     }
     catch (Exception e) {
       return false;
@@ -54,7 +54,7 @@ public class PassView {
       linea2 = br.readLine();
       if (linea2 == null)
         return false;
-      satelite = new Satelite(new TLE(nombre, linea1, linea2));
+      satelite = new SGP_Satelite(new SGP_TLE(nombre, linea1, linea2));
 
       if (!f.exists() || forzarActualizacionTLE) {
         if (br != null)
@@ -89,20 +89,20 @@ public class PassView {
 
   }
 
-  public static Location getLugar(){
+  public static SGP_Location getLugar(){
     return lugar;
   }
 
 
-  public static Satelite getSatelite() {
+  public static SGP_Satelite getSatelite() {
     if (lugar == null)
       return null;
     if (satelite == null)
       return null;
 
-    Timestamp ahora;
-    ahora = Time.getCurrentUniversalTime(lugar.offsetUTC);
-    Sun.calcularPosicion(ahora);
+    SGP_Timestamp ahora;
+    ahora = SGP_Time.getCurrentUniversalTime(lugar.offsetUTC);
+    SGP_Sun.calcularPosicion(ahora);
     lugar.calcularPosicionSol(ahora);
     satelite.calcularVariables(ahora);
     satelite.calcularPosicionSatelite(lugar, ahora);
@@ -111,15 +111,15 @@ public class PassView {
 
   }
 
-  public static Satelite getSatelite(double tiempo) {
+  public static SGP_Satelite getSatelite(double tiempo) {
     if (lugar == null)
       return null;
     if (satelite == null)
       return null;
 
-    Timestamp mt = new Timestamp();
+    SGP_Timestamp mt = new SGP_Timestamp();
 
-    Sun.calcularPosicion(tiempo);
+    SGP_Sun.calcularPosicion(tiempo);
     lugar.calcularPosicionSol(tiempo);
     satelite.calcularVariables(tiempo);
     satelite.calcularPosicionSatelite(lugar, tiempo);
@@ -130,11 +130,11 @@ public class PassView {
 
   public static ArrayList getAvistamientos(double dias) {
     double step = 1.15740722960440E-5 * 30.0; // 30 segundos
-    double tiempo = Time.getCurrentUniversalJulianTime(lugar.offsetUTC);
+    double tiempo = SGP_Time.getCurrentUniversalJulianTime(lugar.offsetUTC);
     double limite = tiempo + (step * 2.0 * 60.0 * 24.0 * dias);
     ArrayList avistamientos = new ArrayList();
 
-    Satelite sat = null;
+    SGP_Satelite sat = null;
 
     for (; ; ) {
       try {
@@ -150,9 +150,9 @@ public class PassView {
         if (tiempo >= limite)
           return avistamientos; // No buscamos m�s.
 
-        Sighting a = new Sighting();
+        SGP_Sighting a = new SGP_Sighting();
         // Guardamos el inicio de la iluminacion
-        a.inicioLuz = (Satelite) sat.clone();
+        a.inicioLuz = (SGP_Satelite) sat.clone();
         // Guardamos la marca de tiempo
         double temp = tiempo;
 
@@ -166,7 +166,7 @@ public class PassView {
         tiempo = tiempo + step;
         sat = getSatelite(tiempo);
         // Guardamos la aparici�n por el horizonte
-        a.inicio = (Satelite) sat.clone();
+        a.inicio = (SGP_Satelite) sat.clone();
         // Recuperamos la marca de tiempo guardada
         tiempo = temp;
         sat = getSatelite(tiempo);
@@ -184,7 +184,7 @@ public class PassView {
             if (a.maximaElevacion == null) {
               tiempo = tiempo - step;
               sat = getSatelite(tiempo);
-              a.maximaElevacion = (Satelite) sat.clone();
+              a.maximaElevacion = (SGP_Satelite) sat.clone();
               tiempo = tiempo + step;
             }
           }
@@ -194,18 +194,18 @@ public class PassView {
         if (a.maximaElevacion == null) {
           tiempo = tiempo - step;
           sat = getSatelite(tiempo);
-          a.maximaElevacion = (Satelite) sat.clone();
+          a.maximaElevacion = (SGP_Satelite) sat.clone();
           tiempo = tiempo + step;
         }
 
         // Guardamos el fin de la iluminaci�n
-        a.finLuz = (Satelite) sat.clone();
+        a.finLuz = (SGP_Satelite) sat.clone();
         // Mientras est� sobre el horizonte, avanzar en el tiempo
         while (sat.elevacion > 0) {
           tiempo = tiempo + step;
           sat = getSatelite(tiempo);
         }
-        a.fin = (Satelite) sat.clone();
+        a.fin = (SGP_Satelite) sat.clone();
         a.offsetUTC = lugar.offsetUTC;
         avistamientos.add(a);
       }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-class LocationFactory {
+class SGP_LocationFactory {
 	private static ArrayList lugares = new ArrayList();
 
 	static void parseLOC(String archivoLugares) throws FileNotFoundException {
@@ -34,7 +34,7 @@ class LocationFactory {
 						longitud = Double.parseDouble(st.nextToken());
 						altitud = Double.parseDouble(st.nextToken());
 						offset = Double.parseDouble(st.nextToken());
-						Location lugar = new Location(nombre, latitud,
+						SGP_Location lugar = new SGP_Location(nombre, latitud,
 								longitud, altitud, offset);
 						lugar.setFicheroLOC(archivoLugares);
 						lugares.add(lugar);
@@ -65,9 +65,9 @@ class LocationFactory {
 			return true;
 	}
 
-	static Location nextLugar() {
+	static SGP_Location nextLugar() {
 		try {
-			Location loc = (Location) lugares.get(0);
+			SGP_Location loc = (SGP_Location) lugares.get(0);
 			lugares.remove(0);
 
 			return loc;
@@ -80,7 +80,7 @@ class LocationFactory {
 		return lugares.size();
 	}
 
-	static void addLugarFicheroLOC(String fichero, Location lugar) {
+	static void addLugarFicheroLOC(String fichero, SGP_Location lugar) {
 
 		try {
 			File f = new File(fichero);
@@ -126,7 +126,7 @@ class LocationFactory {
 
 	}
 
-	static void eliminarLugarFicheroLOC(Location lugar) {
+	static void eliminarLugarFicheroLOC(SGP_Location lugar) {
 		String fichero = lugar.getFicheroLOC();
 
 		try {

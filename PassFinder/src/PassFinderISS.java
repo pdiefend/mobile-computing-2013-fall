@@ -2,8 +2,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
-import sgp.PassView;
-import sgp.Satelite;
+import sgp.SGP_PassView;
+import sgp.SGP_Satelite;
 
 public class PassFinderISS {
 
@@ -16,7 +16,7 @@ public class PassFinderISS {
 		double dias = 1.0;
 		double maxelev_umbral = 10.0;
 
-		PassView.actualizacionForzadaTLE(true); // forces internet use
+		SGP_PassView.actualizacionForzadaTLE(true); // forces internet use
 		Date d = new Date();
 		HTMLInfo.cabecera(d.toString());
 		// Porcesado de los argumentos
@@ -57,10 +57,10 @@ public class PassFinderISS {
 		}
 
 		boolean status = true;
-		status = PassView.setLugar(nombreLocalidad, latitud, longitud, altitud,
+		status = SGP_PassView.setLugar(nombreLocalidad, latitud, longitud, altitud,
 				offsetUTC);
 		if (status)
-			HTMLInfo.localidad(PassView.getLugar());
+			HTMLInfo.localidad(SGP_PassView.getLugar());
 		else {
 			HTMLInfo
 					.error("Error en los datos de entrada para el lugar elegido.");
@@ -69,7 +69,7 @@ public class PassFinderISS {
 			System.exit(1);
 		}
 
-		status = PassView.setTLE();
+		status = SGP_PassView.setTLE();
 		if (status) {
 			File tle = new File("stations.txt");
 			if (tle.exists()) {
@@ -77,7 +77,7 @@ public class PassFinderISS {
 			} else {
 				d = new Date();
 			}
-			Satelite s = PassView.getSatelite();
+			SGP_Satelite s = SGP_PassView.getSatelite();
 
 			HTMLInfo.satelite(s.nombre, s.tle.getLine1TLE(),
 					s.tle.getLine2TLE(), d.toString());
@@ -89,7 +89,7 @@ public class PassFinderISS {
 			System.exit(1);
 		}
 
-		ArrayList avistamientos = PassView.getAvistamientos(dias);
+		ArrayList avistamientos = SGP_PassView.getAvistamientos(dias);
 
 		HTMLInfo.avistamientos(avistamientos, args[5], args[6]);
 

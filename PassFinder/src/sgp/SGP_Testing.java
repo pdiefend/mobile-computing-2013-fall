@@ -3,39 +3,39 @@ package sgp;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class Testing {
+public class SGP_Testing {
 	public static void main(String[] args) {
 		ArrayList satelites = new ArrayList();
 		ArrayList lugares = new ArrayList();
 
 		try {
-			SateliteFactory.parseTLE("c:\\PassViewJava\\sgp\\visual.tle");
-			int cuantosSat = SateliteFactory.howManySatelites();
-			Satelite s;
+			SGP_SateliteFactory.parseTLE("c:\\PassViewJava\\sgp\\visual.tle");
+			int cuantosSat = SGP_SateliteFactory.howManySatelites();
+			SGP_Satelite s;
 			System.out.println("---------------------------------");
 			System.out.println("N�mero de sat�lites: " + cuantosSat);
 			System.out.println("---------------------------------");
 			int j = 0, numeroISS = 0;
-			while (SateliteFactory.hasMoreSatelites()) {
-				s = (Satelite) SateliteFactory.nextSatelite();
+			while (SGP_SateliteFactory.hasMoreSatelites()) {
+				s = (SGP_Satelite) SGP_SateliteFactory.nextSatelite();
 				if (s.nombre.startsWith("ISS (ZARYA)"))
 					numeroISS = j;
 				satelites.add(s);
 				j++;
 			}
-			Satelite sat = (Satelite) satelites.get(numeroISS);
+			SGP_Satelite sat = (SGP_Satelite) satelites.get(numeroISS);
 			// Ya tenemos la ISS seleccionada
 
-			LocationFactory.parseLOC("c:\\PassViewJava\\sgp\\spain.loc");
-			int cuantosLugares = LocationFactory.howManyLugares();
-			Location l;
+			SGP_LocationFactory.parseLOC("c:\\PassViewJava\\sgp\\spain.loc");
+			int cuantosLugares = SGP_LocationFactory.howManyLugares();
+			SGP_Location l;
 			System.out.println("N�mero de lugares: " + cuantosLugares);
 			System.out.println("---------------------------------");
-			while (LocationFactory.hasMoreLugares()) {
-				l = (Location) LocationFactory.nextLugar();
+			while (SGP_LocationFactory.hasMoreLugares()) {
+				l = (SGP_Location) SGP_LocationFactory.nextLugar();
 				lugares.add(l);
 			}
-			l = (Location) lugares.get(3);
+			l = (SGP_Location) lugares.get(3);
 			// Ya tenemos lugar (Murcia)
 
 			System.out.println("Sat�lite: " + sat.nombre);
@@ -44,29 +44,29 @@ public class Testing {
 			System.out.println("---------------------------------");
 
 			// Miramos la hora local y universal
-			Timestamp ahora;
-			Time.setHorarioVerano(false);
-			ahora = Time.getCurrentLocalTime();
+			SGP_Timestamp ahora;
+			SGP_Time.setHorarioVerano(false);
+			ahora = SGP_Time.getCurrentLocalTime();
 			System.out.println("Hora local:\n\t" + ahora);
-			ahora = Time.getCurrentUniversalTime(l.offsetUTC);
+			ahora = SGP_Time.getCurrentUniversalTime(l.offsetUTC);
 			System.out.println("Hora universal:\n\t" + ahora);
-			double j1 = Time.timeToJulianTime(ahora);
+			double j1 = SGP_Time.timeToJulianTime(ahora);
 			System.out.println("Hora universal juliana:\n\t" + j1);
-			Time.julianTimeToTime(j1, ahora);
+			SGP_Time.julianTimeToTime(j1, ahora);
 			System.out.println("Hora universal:\n\t" + ahora);
 			System.out.println("---------------------------------");
 
 			// Lo primero es calcular la posici�n solar
-			Sun.calcularPosicion(ahora); // ahora tiene que ser universal
+			SGP_Sun.calcularPosicion(ahora); // ahora tiene que ser universal
 
 			System.out.println("Datos sobre el sol");
-			System.out.println("\tpos[0]: " + Sun.pos[0]);
-			System.out.println("\tpos[1]: " + Sun.pos[1]);
-			System.out.println("\tpos[2]: " + Sun.pos[2]);
-			System.out.println("\tpos[3]: " + Sun.pos[3]);
-			System.out.println("\tLatitud: " + Sun.latitud);
-			System.out.println("\tlongitud: " + Sun.longitud);
-			System.out.println("\tAltitud: " + Sun.altitud);
+			System.out.println("\tpos[0]: " + SGP_Sun.pos[0]);
+			System.out.println("\tpos[1]: " + SGP_Sun.pos[1]);
+			System.out.println("\tpos[2]: " + SGP_Sun.pos[2]);
+			System.out.println("\tpos[3]: " + SGP_Sun.pos[3]);
+			System.out.println("\tLatitud: " + SGP_Sun.latitud);
+			System.out.println("\tlongitud: " + SGP_Sun.longitud);
+			System.out.println("\tAltitud: " + SGP_Sun.altitud);
 			System.out.println("---------------------------------");
 
 			// Ahora calculamos la posicion y velocidad del sat�lite

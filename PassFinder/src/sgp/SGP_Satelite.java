@@ -1,16 +1,16 @@
 // Clase que representa a un sat�lite
 package sgp;
 
-public class Satelite implements Comparable, Cloneable {
+public class SGP_Satelite implements Comparable, Cloneable {
 	public String nombre;
 	public double azimut, elevacion, rango, ratioRango;
 	public double latitud, longitud, altitud;
 	public boolean visible, eclipsado;
 	public String puntoCardinal;
-	public Timestamp marcaDeTiempo;
+	public SGP_Timestamp marcaDeTiempo;
 
-	public TLE tle;
-	Timestamp tiempo = new Timestamp();
+	public SGP_TLE tle;
+	SGP_Timestamp tiempo = new SGP_Timestamp();
 	double tiempoJuliano = 0;
 	int iexp, ibexp, ideep, iflag;
 	double epoch, julian_epoch, xndt2o, xndd6o, bstar;
@@ -43,13 +43,13 @@ public class Satelite implements Comparable, Cloneable {
 	int isimp = 0;
 
 	// Constructor
-	public Satelite(TLE tle) {
+	public SGP_Satelite(SGP_TLE tle) {
 		this.tle = tle;
 		nombre = tle.getSateliteName();
 		// 1� l�nea TLE
 		catnr = tle.getCatnr();
 		epoch = tle.getEpoch();
-		julian_epoch = Time.julianDateOfEpoch(epoch);
+		julian_epoch = SGP_Time.julianDateOfEpoch(epoch);
 		xndt2o = tle.getXndt2o();
 		xndd6o = tle.getXndd6o();
 		iexp = tle.getIexp();
@@ -67,28 +67,28 @@ public class Satelite implements Comparable, Cloneable {
 
 		// Conversi�n a unidades adecuadas
 		xndd6o = xndd6o * Math.pow(10.0, iexp);
-		bstar = (bstar * Math.pow(10.0, ibexp)) / Constants.ae;
+		bstar = (bstar * Math.pow(10.0, ibexp)) / SGP_Constants.ae;
 		xnodeo = Math.toRadians(xnodeo);
 		omegao = Math.toRadians(omegao);
 		xmo = Math.toRadians(xmo);
 		xincl = Math.toRadians(xincl);
-		xno = (xno * (Math.PI * 2.0)) / Constants.xmnpda;
+		xno = (xno * (Math.PI * 2.0)) / SGP_Constants.xmnpda;
 		xndt2o = (xndt2o * (Math.PI * 2.0))
-				/ (Constants.xmnpda * Constants.xmnpda);
+				/ (SGP_Constants.xmnpda * SGP_Constants.xmnpda);
 		xndd6o = (xndd6o * (Math.PI * 2.0))
-				/ (Constants.xmnpda * Constants.xmnpda * Constants.xmnpda);
+				/ (SGP_Constants.xmnpda * SGP_Constants.xmnpda * SGP_Constants.xmnpda);
 
 		// Determinaci�n del modelo Deep-Space a usar
 		double a1, a0, del1, del0, xnodp, temp;
 
-		a1 = Math.pow(Constants.xke / xno, Constants.tothrd);
-		temp = 1.5 * Constants.ck2
+		a1 = Math.pow(SGP_Constants.xke / xno, SGP_Constants.tothrd);
+		temp = 1.5 * SGP_Constants.ck2
 				* ((3.0 * Math.pow(Math.cos(xincl), 2.0)) - 1.0)
 				/ Math.pow(1.0 - (eo * eo), 1.5);
 		del1 = temp / (a1 * a1);
 		a0 = a1
 				* (1.0 - del1
-						* (0.5 * Constants.tothrd + del1
+						* (0.5 * SGP_Constants.tothrd + del1
 								* (1.0 + 134.0 / 81.0 * del1)));
 		del0 = temp / (a0 * a0);
 		xnodp = xno / (1.0 + del0);
@@ -99,17 +99,17 @@ public class Satelite implements Comparable, Cloneable {
 		iflag = 1;
 	}
 
-	public void calcularVariables(Timestamp t) {
+	public void calcularVariables(SGP_Timestamp t) {
 		marcaDeTiempo = t;
-		calcularVariables(Time.timeToJulianTime(t));
+		calcularVariables(SGP_Time.timeToJulianTime(t));
 	}
 
 	public void calcularVariables(double tj) {
 		tiempoJuliano = tj;
 
-		Time.julianTimeToTime(tj, tiempo);
+		SGP_Time.julianTimeToTime(tj, tiempo);
 		marcaDeTiempo = tiempo;
-		SGP.SGP(this);
+		SGP_SGP.SGP(this);
 		setEclipsacionSatelite();
 		calcularLatLonAlt(tj);
 	}
@@ -121,11 +121,11 @@ public class Satelite implements Comparable, Cloneable {
 		double[] earth = new double[4];
 
 		// Determina eclipse parcial
-		sd_earth = Math.asin(Constants.xkmper / pos[3]);
-		MathematicalFunctions.subVectores(Sun.pos, pos, rho);
-		sd_sun = Math.asin(Constants.sr / rho[3]);
-		MathematicalFunctions.multEscalarVector(pos, -1.0, earth);
-		delta = MathematicalFunctions.angulo(Sun.pos, earth);
+		sd_earth = Math.asin(SGP_Constants.xkmper / pos[3]);
+		SGP_MathematicalFunctions.subVectores(SGP_Sun.pos, pos, rho);
+		sd_sun = Math.asin(SGP_Constants.sr / rho[3]);
+		SGP_MathematicalFunctions.multEscalarVector(pos, -1.0, earth);
+		delta = SGP_MathematicalFunctions.angulo(SGP_Sun.pos, earth);
 		depth = sd_earth - sd_sun - delta;
 		if (sd_earth < sd_sun)
 			eclipsado = false;
@@ -136,11 +136,11 @@ public class Satelite implements Comparable, Cloneable {
 
 	}
 
-	public void calcularPosicionSatelite(Location obs, Timestamp t) {
-		calcularPosicionSatelite(obs, Time.timeToJulianTime(t));
+	public void calcularPosicionSatelite(SGP_Location obs, SGP_Timestamp t) {
+		calcularPosicionSatelite(obs, SGP_Time.timeToJulianTime(t));
 	}
 
-	public void calcularPosicionSatelite(Location obs, double jt) {
+	public void calcularPosicionSatelite(SGP_Location obs, double jt) {
 		int i;
 		double sin_lat, cos_lat, sin_theta, cos_theta;
 		double el, azim, lat, theta;
@@ -151,7 +151,7 @@ public class Satelite implements Comparable, Cloneable {
 			range[n] = pos[n] - obs.pos[n];
 			rgvel[n] = vel[n] - obs.vel[n];
 		}
-		MathematicalFunctions.magnitud(range);
+		SGP_MathematicalFunctions.magnitud(range);
 
 		lat = obs.polares[0];
 		theta = obs.polares[3];
@@ -174,7 +174,7 @@ public class Satelite implements Comparable, Cloneable {
 		traduceAzimut();
 		elevacion = el; // Elevation (radians)
 		rango = range[3]; // Range (kilometers)
-		ratioRango = MathematicalFunctions.dot(range, rgvel) / range[3]; // Range
+		ratioRango = SGP_MathematicalFunctions.dot(range, rgvel) / range[3]; // Range
 																			// Rate
 																			// (kilometers/second)
 		// Corrections for atmospheric refraction }
@@ -195,20 +195,20 @@ public class Satelite implements Comparable, Cloneable {
 		double alt, lon, lat;
 		double theta, r, e2, phi, c;
 
-		theta = MathematicalFunctions.acTan(pos[1], pos[0]);
-		lon = MathematicalFunctions.modulus(theta - Time.thetaG_JD(time),
+		theta = SGP_MathematicalFunctions.acTan(pos[1], pos[0]);
+		lon = SGP_MathematicalFunctions.modulus(theta - SGP_Time.thetaG_JD(time),
 				Math.PI * 2.0);
 		r = Math.sqrt((pos[0] * pos[0]) + (pos[1] * pos[1]));
-		e2 = Constants.f * (2.0 - Constants.f);
-		lat = MathematicalFunctions.acTan(pos[2], r);
+		e2 = SGP_Constants.f * (2.0 - SGP_Constants.f);
+		lat = SGP_MathematicalFunctions.acTan(pos[2], r);
 		do {
 			phi = lat;
 			c = 1.0 / Math.sqrt(1.0 - e2 * Math.pow(Math.sin(phi), 2.0));
-			lat = MathematicalFunctions.acTan(pos[2] + Constants.xkmper * c
+			lat = SGP_MathematicalFunctions.acTan(pos[2] + SGP_Constants.xkmper * c
 					* e2 * Math.sin(phi), r);
 		} while (!(Math.abs(lat - phi) < 1e-10));
 
-		alt = r / Math.cos(lat) - Constants.xkmper * c;
+		alt = r / Math.cos(lat) - SGP_Constants.xkmper * c;
 
 		latitud = Math.toDegrees(lat);
 		longitud = Math.toDegrees(lon);
@@ -239,13 +239,13 @@ public class Satelite implements Comparable, Cloneable {
 	}
 
 	public int compareTo(Object o) {
-		Satelite s = (Satelite) o;
+		SGP_Satelite s = (SGP_Satelite) o;
 		return nombre.compareTo(s.nombre);
 	}
 
 	public Object clone() throws CloneNotSupportedException {
-		Satelite s = (Satelite) super.clone();
-		s.marcaDeTiempo = new Timestamp(marcaDeTiempo.yr, marcaDeTiempo.mo,
+		SGP_Satelite s = (SGP_Satelite) super.clone();
+		s.marcaDeTiempo = new SGP_Timestamp(marcaDeTiempo.yr, marcaDeTiempo.mo,
 				marcaDeTiempo.dy, marcaDeTiempo.hr, marcaDeTiempo.mi,
 				marcaDeTiempo.se, marcaDeTiempo.hu);
 		return s;
