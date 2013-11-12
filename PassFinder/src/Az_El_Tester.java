@@ -16,7 +16,8 @@ public class Az_El_Tester {
 
 		SGP_Satelite iss = new SGP_Satelite(new SGP_TLE(name, l1, l2));
 
-		SGP_Location lugar = new SGP_Location("Bucknell", 40.95530, -76.88206, 134, -5);
+		SGP_Location lugar = new SGP_Location("Bucknell", 40.95530, -76.88206,
+				134, -5);
 
 		// Works Note that month is offset by one (month = month - 1)
 		// (Nov: 11 - 1 = 10) but nothing else... WTF
@@ -32,18 +33,18 @@ public class Az_El_Tester {
 		iss.calcularVariables(ahora);
 		iss.calcularPosicionSatelite(lugar, ahora);
 
-		System.out.println(ahora);
-		System.out.print("AZ: " + iss.azimut);
+		System.out.print("Time: " + ahora);
+		System.out.print("; AZ: " + iss.azimut);
 		System.out.println(", EL: " + iss.elevacion);
 		// System.out.print(", Al: " + iss.altitud);
 
-		lugar.calcularVariables(time);
-		iss.calcularVariables(time);
-		iss.calcularPosicionSatelite(lugar, time);
-
-		System.out.println(time);
-		System.out.print("time: AZ: " + iss.azimut);
-		System.out.println(", EL: " + iss.elevacion);
+		/*
+		 * lugar.calcularVariables(time); iss.calcularVariables(time);
+		 * iss.calcularPosicionSatelite(lugar, time);
+		 * 
+		 * System.out.println(time); System.out.print("time: AZ: " +
+		 * iss.azimut); System.out.println(", EL: " + iss.elevacion);
+		 */
 		// System.out.print(", Al: " + iss.altitud);
 	}
 }
