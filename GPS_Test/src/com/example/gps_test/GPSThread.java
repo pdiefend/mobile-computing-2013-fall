@@ -16,14 +16,19 @@ public class GPSThread extends Thread {
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10,
 				locationListener);
 		Log.i(TAG, "Got Location Listener");
+		Location loc = null;
 		while (true) {
 			Log.i(TAG, lat);
 			Log.i(TAG, lon);
 			try {
+				if (loc != null) {
+					Log.i(TAG, "" + loc.getLatitude());
+					Log.i(TAG, "" + loc.getLatitude());
+				}
 				Thread.sleep(5000);
 			} catch (InterruptedException ex) {
-
 			}
+
 		}
 	}
 
@@ -39,9 +44,9 @@ public class GPSThread extends Thread {
 		public void onLocationChanged(Location loc) {
 
 			lon = "Longitude: " + loc.getLongitude();
-			// Log.i(TAG, lon);
+			Log.i(TAG, lon);
 			lat = "Latitude: " + loc.getLatitude();
-			// Log.i(TAG, lat);
+			Log.i(TAG, lat);
 
 			/*----------to get City-Name from coordinates ------------- */
 			/*
