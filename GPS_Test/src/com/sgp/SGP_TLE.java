@@ -1,5 +1,9 @@
 package com.sgp;
 
+import java.util.Scanner;
+
+import android.util.Log;
+
 /**
  * Clase encargada de almacenar y hacer accesibles los campos de las dos lineas
  * con formato TLE. Dichos campos contienen los datos necesarios para conocer la
@@ -40,6 +44,18 @@ public class SGP_TLE {
 		satelliteName = name;
 		line1TLE = line1;
 		line2TLE = line2;
+	}
+
+	public SGP_TLE(String tle) {
+		try {
+			Scanner scan = new Scanner(tle);
+			satelliteName = scan.nextLine();
+			line1TLE = scan.nextLine();
+			line2TLE = scan.nextLine();
+			scan.close();
+		} catch (Exception ex) {
+			Log.e("SGP Algorithim", "TLE parse failed");
+		}
 	}
 
 	/**

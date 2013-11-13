@@ -13,6 +13,7 @@ import com.example.gps_test.R;
 
 public class MainActivity extends Activity {
 	public final String TAG = "MainActivity";
+	private boolean duckTape = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +35,22 @@ public class MainActivity extends Activity {
 		// Define a listener that responds to location updates
 		LocationListener locationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
-				// Called when a new location is found by the network location
-				// provider.
-				// makeUseOfNewLocation(location);
-				Log.i(TAG, "latitude: " + location.getLatitude());
-				Log.i(TAG, "longitude: " + location.getLongitude());
-				Log.i(TAG, "altitude: " + location.getAltitude());
+
+				if (!duckTape) {
+					// Called when a new location is found by the network
+					// location
+					// provider.
+					// makeUseOfNewLocation(location);
+					Log.i(TAG, "latitude: " + location.getLatitude());
+					Log.i(TAG, "longitude: " + location.getLongitude());
+					Log.i(TAG, "altitude: " + location.getAltitude());
+
+					GPS_Thread t = new GPS_Thread();
+					t.recieveData(location.getLatitude(),
+							location.getLongitude(), location.getAltitude());
+					t.start();
+					duckTape = true;
+				}
 			}
 
 			public void onStatusChanged(String provider, int status,
@@ -70,5 +81,4 @@ public class MainActivity extends Activity {
 		// thread.run();
 		return true;
 	}
-
 }
