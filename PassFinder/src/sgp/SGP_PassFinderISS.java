@@ -1,11 +1,11 @@
+package sgp;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
-import sgp.SGP_PassView;
-import sgp.SGP_Satelite;
 
-public class PassFinderISS {
+public class SGP_PassFinderISS {
 
 	public static void main(String[] args) {
 		String nombreLocalidad = null;
@@ -18,17 +18,17 @@ public class PassFinderISS {
 
 		SGP_PassView.actualizacionForzadaTLE(true); // forces internet use
 		Date d = new Date();
-		HTMLInfo.cabecera(d.toString());
+		SGP_HTMLInfo.cabecera(d.toString());
 		// Porcesado de los argumentos
 		if (args.length != 7) {
-			HTMLInfo.error("Error: El n�mero de argumentos no es adecuado."); // number
+			SGP_HTMLInfo.error("Error: El n�mero de argumentos no es adecuado."); // number
 																					// of
 																					// arguements
 																					// no
 																					// es
 																					// bueno
-			HTMLInfo.uso();
-			HTMLInfo.fin();
+			SGP_HTMLInfo.uso();
+			SGP_HTMLInfo.fin();
 			System.exit(1);
 		} else {
 			nombreLocalidad = args[0];
@@ -39,19 +39,19 @@ public class PassFinderISS {
 			try {
 				dias = Double.parseDouble(args[5]);
 			} catch (Exception e) {
-				HTMLInfo
+				SGP_HTMLInfo
 						.error("Error: El argumento Dias (6�) no es un n�mero.");
-				HTMLInfo.uso();
-				HTMLInfo.fin();
+				SGP_HTMLInfo.uso();
+				SGP_HTMLInfo.fin();
 				System.exit(1);
 			}
 			try {
 				maxelev_umbral = Double.parseDouble(args[6]);
 			} catch (Exception e) {
-				HTMLInfo
+				SGP_HTMLInfo
 						.error("Error: El argumento Maxima Elevaci�n umbral (7�) no es un n�mero.");
-				HTMLInfo.uso();
-				HTMLInfo.fin();
+				SGP_HTMLInfo.uso();
+				SGP_HTMLInfo.fin();
 				System.exit(1);
 			}
 		}
@@ -60,12 +60,12 @@ public class PassFinderISS {
 		status = SGP_PassView.setLugar(nombreLocalidad, latitud, longitud, altitud,
 				offsetUTC);
 		if (status)
-			HTMLInfo.localidad(SGP_PassView.getLugar());
+			SGP_HTMLInfo.localidad(SGP_PassView.getLugar());
 		else {
-			HTMLInfo
+			SGP_HTMLInfo
 					.error("Error en los datos de entrada para el lugar elegido.");
-			HTMLInfo.uso();
-			HTMLInfo.fin();
+			SGP_HTMLInfo.uso();
+			SGP_HTMLInfo.fin();
 			System.exit(1);
 		}
 
@@ -77,21 +77,21 @@ public class PassFinderISS {
 			} else {
 				d = new Date();
 			}
-			SGP_Satelite s = SGP_PassView.getSatelite();
+			SGP_Satellite s = SGP_PassView.getSatelite();
 
-			HTMLInfo.satelite(s.nombre, s.tle.getLine1TLE(),
+			SGP_HTMLInfo.satelite(s.nombre, s.tle.getLine1TLE(),
 					s.tle.getLine2TLE(), d.toString());
 		} else {
-			HTMLInfo
+			SGP_HTMLInfo
 					.error("    Archivo no disponible en disco. Falta conexi�n a Internet.");
-			HTMLInfo.uso();
-			HTMLInfo.fin();
+			SGP_HTMLInfo.uso();
+			SGP_HTMLInfo.fin();
 			System.exit(1);
 		}
 
 		ArrayList avistamientos = SGP_PassView.getAvistamientos(dias);
 
-		HTMLInfo.avistamientos(avistamientos, args[5], args[6]);
+		SGP_HTMLInfo.avistamientos(avistamientos, args[5], args[6]);
 
 	}
 }

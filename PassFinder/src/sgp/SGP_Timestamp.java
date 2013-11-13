@@ -25,7 +25,7 @@ public class SGP_Timestamp {
 		this.hu = hu;
 	}
 
-	void setValues(int yr, int mo, int dy, int hr, int mi, int se, int hu) {
+	public void setValues(int yr, int mo, int dy, int hr, int mi, int se, int hu) {
 		this.yr = yr;
 		this.mo = mo;
 		this.dy = dy;

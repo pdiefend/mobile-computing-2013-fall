@@ -3,7 +3,7 @@ package sgp;
 import java.text.*;
 
 public class SGP_Sighting {
-  public SGP_Satelite
+  public SGP_Satellite
       inicio=null,
       inicioLuz=null,
       fin=null,

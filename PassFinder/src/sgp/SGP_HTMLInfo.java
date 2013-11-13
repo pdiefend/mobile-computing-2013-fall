@@ -1,7 +1,8 @@
+package sgp;
 import sgp.*;
 import java.util.*;
 
-public class HTMLInfo {
+public class SGP_HTMLInfo {
 
   public static void cabecera(String fecha){
     System.out.print("<html>\n");

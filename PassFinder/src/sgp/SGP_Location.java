@@ -15,14 +15,16 @@ public class SGP_Location implements Comparable {
 
 	private String ficheroLOC = "";
 
-	public SGP_Location(String nom, double lat, double lon, double alt, double off) {
-		nombre = nom;
+	public SGP_Location(String name, double lat, double lon, double alt,
+			double off) {
+		nombre = name;
 		latitud = lat;
 		longitud = lon;
 		altitud = alt;
 		offsetUTC = off;
 		polares[0] = Math.toRadians(lat);
-		polares[1] = Math.toRadians(SGP_MathematicalFunctions.modulus(lon, 360));
+		polares[1] = Math
+				.toRadians(SGP_MathematicalFunctions.modulus(lon, 360));
 		polares[2] = alt * 0.001;
 	}
 
@@ -41,7 +43,8 @@ public class SGP_Location implements Comparable {
 		altitud = alt;
 		offsetUTC = off;
 		polares[0] = Math.toRadians(lat);
-		polares[1] = Math.toRadians(SGP_MathematicalFunctions.modulus(lon, 360));
+		polares[1] = Math
+				.toRadians(SGP_MathematicalFunctions.modulus(lon, 360));
 		polares[2] = alt * 0.001;
 	}
 
@@ -50,15 +53,15 @@ public class SGP_Location implements Comparable {
 		return nombre.compareTo(l.nombre);
 	}
 
-	boolean esDeNoche() {
+	public boolean esDeNoche() {
 		return (elevacionSol < twilight);
 	}
 
-	void calcularPosicionSol(SGP_Timestamp t) {
+	public void calcularPosicionSol(SGP_Timestamp t) {
 		calcularPosicionSol(SGP_Time.timeToJulianTime(t));
 	}
 
-	void calcularPosicionSol(double jt) {
+	public void calcularPosicionSol(double jt) {
 		int i;
 		double sin_lat, cos_lat, sin_theta, cos_theta;
 		double el, azim, lat, theta;
@@ -92,8 +95,8 @@ public class SGP_Location implements Comparable {
 		elevacionSol = el; // Elevation (radians)
 		rangoSol = range[3]; // Range (kilometers)
 		ratioRangoSol = SGP_MathematicalFunctions.dot(range, rgvel) / range[3]; // Range
-																			// Rate
-																			// (kilometers/second)
+		// Rate
+		// (kilometers/second)
 		// Corrections for atmospheric refraction }
 		// Reference: Astronomical Algorithms by Jean Meeus, pp. 101-104 }
 		// Note: Correction is meaningless when apparent elevation is below

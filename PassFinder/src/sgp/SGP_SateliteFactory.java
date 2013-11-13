@@ -28,7 +28,7 @@ class SGP_SateliteFactory {
 				linea2 = br.readLine();
 				if (linea2 == null)
 					break;
-				satelites.add(new SGP_Satelite(new SGP_TLE(nombre, linea1, linea2)));
+				satelites.add(new SGP_Satellite(new SGP_TLE(nombre, linea1, linea2)));
 			} while (true);
 			br.close();
 			fr.close();
@@ -49,9 +49,9 @@ class SGP_SateliteFactory {
 			return true;
 	}
 
-	static SGP_Satelite nextSatelite() {
+	static SGP_Satellite nextSatelite() {
 		try {
-			SGP_Satelite sat = (SGP_Satelite) satelites.get(0);
+			SGP_Satellite sat = (SGP_Satellite) satelites.get(0);
 			satelites.remove(0);
 
 			return sat;

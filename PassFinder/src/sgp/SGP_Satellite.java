@@ -1,7 +1,7 @@
 // Clase que representa a un sat�lite
 package sgp;
 
-public class SGP_Satelite implements Comparable, Cloneable {
+public class SGP_Satellite implements Comparable, Cloneable {
 	public String nombre;
 	public double azimut, elevacion, rango, ratioRango;
 	public double latitud, longitud, altitud;
@@ -43,7 +43,7 @@ public class SGP_Satelite implements Comparable, Cloneable {
 	int isimp = 0;
 
 	// Constructor
-	public SGP_Satelite(SGP_TLE tle) {
+	public SGP_Satellite(SGP_TLE tle) {
 		this.tle = tle;
 		nombre = tle.getSateliteName();
 		// 1� l�nea TLE
@@ -239,12 +239,12 @@ public class SGP_Satelite implements Comparable, Cloneable {
 	}
 
 	public int compareTo(Object o) {
-		SGP_Satelite s = (SGP_Satelite) o;
+		SGP_Satellite s = (SGP_Satellite) o;
 		return nombre.compareTo(s.nombre);
 	}
 
 	public Object clone() throws CloneNotSupportedException {
-		SGP_Satelite s = (SGP_Satelite) super.clone();
+		SGP_Satellite s = (SGP_Satellite) super.clone();
 		s.marcaDeTiempo = new SGP_Timestamp(marcaDeTiempo.yr, marcaDeTiempo.mo,
 				marcaDeTiempo.dy, marcaDeTiempo.hr, marcaDeTiempo.mi,
 				marcaDeTiempo.se, marcaDeTiempo.hu);

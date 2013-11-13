@@ -7,14 +7,14 @@ package sgp;
 
 class SGP_SGP {
 
-	static void SGP(SGP_Satelite sat) {
+	static void SGP(SGP_Satellite sat) {
 		if (sat.ideep == 0) // Selecci�n del modelo "Deep-Space" adecuado
 			SGP4(sat);
 		else
 			SDP4(sat);
 	}
 
-	static void SGP4(SGP_Satelite sat) {
+	static void SGP4(SGP_Satellite sat) {
 		int i;
 		double cosuk, sinuk, rfdotk, vx, vy, vz, ux, uy, uz, xmy, xmx, cosnok, sinnok, cosik, sinik, rdotk, xinck, xnodek, uk, rk, cos2u, sin2u, u, sinu, cosu, betal, rfdot, rdot, r, pl, elsq, esine, ecose, epw, temp6, temp5, temp4, temp3, cosepw, sinepw, capu, ayn, xlt, aynl, xll, axn, xn, beta, xl, e, a, tfour, temp2, tcube, delm, delomg, templ, tempe, tempa, xnode, tsq, xmp, temp, omega, xnoddf, omgadf, xmdf, x, y, z, xdot, ydot, zdot, temp1;
 
@@ -285,7 +285,7 @@ class SGP_SGP {
 
 	}
 
-	static void SDP4(SGP_Satelite sat) {
+	static void SDP4(SGP_Satellite sat) {
 		double tsince = (sat.tiempoJuliano - sat.julian_epoch)
 				* SGP_Constants.xmnpda;
 		System.out.println("No implementado todav�a");

@@ -11,19 +11,19 @@ public class SGP_Testing {
 		try {
 			SGP_SateliteFactory.parseTLE("c:\\PassViewJava\\sgp\\visual.tle");
 			int cuantosSat = SGP_SateliteFactory.howManySatelites();
-			SGP_Satelite s;
+			SGP_Satellite s;
 			System.out.println("---------------------------------");
 			System.out.println("N�mero de sat�lites: " + cuantosSat);
 			System.out.println("---------------------------------");
 			int j = 0, numeroISS = 0;
 			while (SGP_SateliteFactory.hasMoreSatelites()) {
-				s = (SGP_Satelite) SGP_SateliteFactory.nextSatelite();
+				s = (SGP_Satellite) SGP_SateliteFactory.nextSatelite();
 				if (s.nombre.startsWith("ISS (ZARYA)"))
 					numeroISS = j;
 				satelites.add(s);
 				j++;
 			}
-			SGP_Satelite sat = (SGP_Satelite) satelites.get(numeroISS);
+			SGP_Satellite sat = (SGP_Satellite) satelites.get(numeroISS);
 			// Ya tenemos la ISS seleccionada
 
 			SGP_LocationFactory.parseLOC("c:\\PassViewJava\\sgp\\spain.loc");
