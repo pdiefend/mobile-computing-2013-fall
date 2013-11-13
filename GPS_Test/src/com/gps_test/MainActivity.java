@@ -1,4 +1,4 @@
-package com.example.gps_test;
+package com.gps_test;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+
+import com.example.gps_test.R;
 
 public class MainActivity extends Activity {
 	public final String TAG = "MainActivity";
@@ -53,13 +55,12 @@ public class MainActivity extends Activity {
 
 		// Register the listener with the Location Manager to receive location
 		// updates
-		// String locationProvider = LocationManager.NETWORK_PROVIDER;
+		String locationProvider = LocationManager.NETWORK_PROVIDER;
 		// Or, use GPS location data:
-		String locationProvider = LocationManager.GPS_PROVIDER;
+		// String locationProvider = LocationManager.GPS_PROVIDER;
 
-		
-		locationManager.requestLocationUpdates(
-				locationProvider, 0, 0, locationListener);
+		locationManager.requestLocationUpdates(locationProvider, 0, 0,
+				locationListener);
 
 		// GPSThread thread = new GPSThread();
 
