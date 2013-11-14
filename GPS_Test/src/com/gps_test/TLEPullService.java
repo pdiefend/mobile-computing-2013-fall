@@ -15,7 +15,6 @@ public class TLEPullService extends IntentService {
 	public TLEPullService() {
 		super("TLEPullService");
 		this.downloader = new SGP_TLE_Download();
-		// TODO Auto-generated constructor stub
 		Log.i(TAG, "Created");
 	}
 

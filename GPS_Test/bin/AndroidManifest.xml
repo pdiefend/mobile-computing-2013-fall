@@ -27,6 +27,8 @@
         </activity>
         <service android:name="com.gps_test.TLEPullService"
             android:exported="false"/>
+        <service android:name="com.gps_test.LocationPullService"
+            android:exported="false"/>
     </application>
 
 </manifest>
