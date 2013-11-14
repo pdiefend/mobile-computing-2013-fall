@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.sgp.SGP_API;
 import com.sgp.SGP_Location;
-import com.sgp.SGP_TLE;
-import com.sgp.SGP_TLE_Download;
 
 public class GPS_Thread extends Thread {
 	private double lat;
@@ -14,8 +12,6 @@ public class GPS_Thread extends Thread {
 
 	@Override
 	public void run() {
-		SGP_TLE_Download d = new SGP_TLE_Download();
-		SGP_TLE tle = new SGP_TLE(d.downloadTLE("25544"));
 
 		SGP_API iss = new SGP_API(tle, new SGP_Location("Bucknell", lat, lon,
 				(int) alt, -5));
