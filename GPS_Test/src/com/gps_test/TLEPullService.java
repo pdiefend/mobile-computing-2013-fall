@@ -64,7 +64,7 @@ public class TLEPullService extends IntentService {
 
 						// save the TLE
 						PrintWriter pw = new PrintWriter(new FileWriter(
-								dir.getAbsolutePath() + "tles.txt", true));
+								dir.getPath() + "tles.txt", true));
 
 						pw.println(result);
 						pw.close();
@@ -77,16 +77,27 @@ public class TLEPullService extends IntentService {
 								new FileReader(dir.getAbsolutePath()
 										+ "tles.txt"));
 						String line = reader.readLine();
+						boolean found = false;
+						result = "";
+
 						while (line != null) {
-							System.out.println(line);
+							if (line.substring(8).contains(extras[1])) {
+								result += line;
+								found = true;
+							}
 							line = reader.readLine();
 						}
 						reader.close();
-						// store in result
-						result = "";
 
-						// NOT DONE
-						// YET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						if (!found) {
+							result = downloader.downloadTLE(extras[1]);
+							// store the TLEs
+							PrintWriter pw = new PrintWriter(new FileWriter(
+									dir.getPath() + "tles.txt", true));
+
+							pw.println(result);
+							pw.close();
+						}
 
 						Intent localIntent = new Intent(
 								Constants.BROADCAST_ACTION)
@@ -126,7 +137,7 @@ public class TLEPullService extends IntentService {
 
 						// save the TLE
 						PrintWriter pw = new PrintWriter(new FileWriter(
-								dir.getAbsolutePath() + "tles.txt", true));
+								dir.getPath() + "tles.txt", true));
 
 						pw.println(result);
 						pw.close();
@@ -140,7 +151,7 @@ public class TLEPullService extends IntentService {
 										+ "tles.txt"));
 						String line = reader.readLine();
 						while (line != null) {
-							System.out.println(line);
+							// System.out.println(line);
 							line = reader.readLine();
 						}
 						// store the lines in a String except the one being
@@ -163,9 +174,10 @@ public class TLEPullService extends IntentService {
 
 						// store the TLEs
 						PrintWriter pw = new PrintWriter(new FileWriter(
-								dir.getAbsolutePath() + "tles.txt", true));
+								dir.getPath() + "tles.txt", true));
 
 						pw.println(result);
+						pw.close();
 						// print the other TLEs back
 					}
 
