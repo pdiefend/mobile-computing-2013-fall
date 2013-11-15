@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -19,52 +22,13 @@ import com.sgp.SGP_TLE;
 
 public class MainActivity extends Activity {
 	public final String TAG = "MainActivity";
-	// private String locationProvider = LocationManager.NETWORK_PROVIDER; //
-	// Or,
-	// use
-	// GPS
-	// location
-	// data:
-	// LocationManager.GPS_PROVIDER;
+	private String locationProvider = LocationManager.NETWORK_PROVIDER;
+	// private String locationProvider = LocationManager.GPS_PROVIDER;
+
 	private double latitude;
 	private double longitude;
 	private double altitude;
 	private String TLE;
-
-	// Acquire a reference to the system Location Manager
-	// private LocationManager locationManager;
-
-	// Define a listener that responds to location updates
-	// LocationListener locationListener = new LocationListener() {
-	// public void onLocationChanged(Location location) {
-	//
-	// // Called when a new location is found by the network
-	// // location
-	// // provider.
-	// // makeUseOfNewLocation(location);
-	// Log.i(TAG, "latitude: " + location.getLatitude());
-	// Log.i(TAG, "longitude: " + location.getLongitude());
-	// Log.i(TAG, "altitude: " + location.getAltitude());
-	//
-	// latitude = location.getLatitude();
-	// longitude = location.getLongitude();
-	// altitude = location.getAltitude();
-	// // GPS_Thread t = new GPS_Thread();
-	// // t.recieveData(location.getLatitude(), location.getLongitude(),
-	// // location.getAltitude());
-	// // t.start();
-	//
-	// }
-	//
-	// public void onStatusChanged(String provider, int status, Bundle extras) {
-	// }
-	//
-	// public void onProviderEnabled(String provider) {
-	// }
-	//
-	// public void onProviderDisabled(String provider) {
-	// }
-	// };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,26 +37,29 @@ public class MainActivity extends Activity {
 
 		Log.i(TAG, "Created");
 
+		String[] extras = new String[2];
+		extras[0] = "update";
+		extras[1] = "25544";
+		Intent mServiceIntent = new Intent(this, TLEPullService.class);
+		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
+		// mServiceIntent.setData(Uri.parse("25544")); // hardcoded get ISS
+		this.startService(mServiceIntent);
+		Log.i(TAG, "Download Service Started");
+		// Response will come in the broadcast receiver below
+
+		// mServiceIntent = new Intent(this, TLEPullService.class);
+		// mServiceIntent.setData(Uri.parse("37820")); // hardcoded get Tiangong
+		// 1
+		// this.startService(mServiceIntent);
+		// Log.i(TAG, "Download Service Started");
+
 		// Register the listener with the Location Manager to receive location
 		// updates
+		locationManager = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
 
-		Intent mServiceIntent = new Intent(this, TLEPullService.class);
-		mServiceIntent.setData(Uri.parse("25544")); // hardcoded get ISS
-		this.startService(mServiceIntent);
-
-		Log.i(TAG, "Download Service Started");
-
-		mServiceIntent = new Intent(this, LocationPullService.class);
-		this.startService(mServiceIntent);
-
-		Log.i(TAG, "Location Service Started");
-
-		// locationManager = (LocationManager) this
-		// .getSystemService(Context.LOCATION_SERVICE);
-		//
-		// locationManager.requestSingleUpdate(locationProvider,
-		// locationListener,
-		// Looper.getMainLooper());
+		locationManager.requestSingleUpdate(locationProvider, locationListener,
+				Looper.getMainLooper());
 
 		IntentFilter mStatusIntentFilter = new IntentFilter(
 				Constants.BROADCAST_ACTION);
@@ -102,12 +69,6 @@ public class MainActivity extends Activity {
 		// Registers the DownloadStateReceiver and its intent filters
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mDownloadStateReceiver, mStatusIntentFilter);
-		// GPSThread thread = new GPSThread();
-
-		// LocationManager locationManager = (LocationManager)
-		// getSystemService(Context.LOCATION_SERVICE);
-		// thread.receiveLocManager(locationManager);
-		// thread.run();
 
 	}
 
@@ -130,10 +91,10 @@ public class MainActivity extends Activity {
 		Log.i("GPS_Thread", "visible: " + iss.isVisible());
 	}
 
+	// Broadcast receiver for receiving status updates from the
+	// IntentService
 	private class TLEResponseReceiver extends BroadcastReceiver {
 
-		// Broadcast receiver for receiving status updates from the
-		// IntentService
 		// Prevents instantiation
 		private TLEResponseReceiver() {
 		}
@@ -145,7 +106,35 @@ public class MainActivity extends Activity {
 			Bundle extras = intent.getExtras();
 			TLE = extras.getString(Constants.EXTENDED_DATA_STATUS);
 			Log.i(TAG, TLE);
-
 		}
 	}
+
+	// Acquire a reference to the system Location Manager
+	private LocationManager locationManager;
+	// Define a listener that responds to location updates
+	LocationListener locationListener = new LocationListener() {
+		public void onLocationChanged(Location location) {
+
+			// Called when a new location is found by the network
+			// location
+			// provider.
+			Log.i(TAG, "latitude: " + location.getLatitude());
+			Log.i(TAG, "longitude: " + location.getLongitude());
+			Log.i(TAG, "altitude: " + location.getAltitude());
+
+			latitude = location.getLatitude();
+			longitude = location.getLongitude();
+			altitude = location.getAltitude();
+
+		}
+
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+
+		public void onProviderEnabled(String provider) {
+		}
+
+		public void onProviderDisabled(String provider) {
+		}
+	};
 }
