@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 		Log.i(TAG, "Created");
 
 		String[] extras = new String[2];
-		extras[0] = "get";
+		extras[0] = "update";
 		extras[1] = "25544";
 		Intent mServiceIntent = new Intent(this, TLEPullService.class);
 		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);

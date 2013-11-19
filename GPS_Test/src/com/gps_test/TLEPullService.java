@@ -64,7 +64,7 @@ public class TLEPullService extends IntentService {
 
 						// save the TLE
 						PrintWriter pw = new PrintWriter(new FileWriter(
-								dir.getPath() + "tles.txt", true));
+								dir.getPath() + "/tles.txt", true));
 
 						pw.println(result);
 						pw.close();
@@ -74,14 +74,13 @@ public class TLEPullService extends IntentService {
 
 						// search for the TLE
 						BufferedReader reader = new BufferedReader(
-								new FileReader(dir.getAbsolutePath()
-										+ "tles.txt"));
+								new FileReader(dir.getPath() + "/tles.txt"));
 						String line = reader.readLine();
 						boolean found = false;
 						result = "";
 
 						while (line != null) {
-							if (line.substring(8).contains(extras[1])) {
+							if (line.contains(extras[1])) {
 								result += line;
 								found = true;
 							}
@@ -93,7 +92,7 @@ public class TLEPullService extends IntentService {
 							result = downloader.downloadTLE(extras[1]);
 							// store the TLEs
 							PrintWriter pw = new PrintWriter(new FileWriter(
-									dir.getPath() + "tles.txt", true));
+									dir.getPath() + "/tles.txt", true));
 
 							pw.println(result);
 							pw.close();
@@ -110,8 +109,6 @@ public class TLEPullService extends IntentService {
 					}
 
 				} else if (extras[0].contains("update")) {
-
-					// store in location storage
 					// check if we have the TLE in local storage
 					File dir = getExternalFilesDir(null);
 					String[] list = dir.list();
@@ -137,7 +134,7 @@ public class TLEPullService extends IntentService {
 
 						// save the TLE
 						PrintWriter pw = new PrintWriter(new FileWriter(
-								dir.getPath() + "tles.txt", true));
+								dir.getPath() + "/tles.txt", true));
 
 						pw.println(result);
 						pw.close();
@@ -147,21 +144,27 @@ public class TLEPullService extends IntentService {
 
 						// search for the TLE
 						BufferedReader reader = new BufferedReader(
-								new FileReader(dir.getAbsolutePath()
-										+ "tles.txt"));
+								new FileReader(dir.getPath() + "/tles.txt"));
 						String line = reader.readLine();
-						while (line != null) {
-							// System.out.println(line);
-							line = reader.readLine();
-						}
-						// store the lines in a String except the one being
-						// updated
-						reader.close();
-						// store in result
 						result = "";
 
-						// NOT DONE
-						// YET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						// store the TLEs that are not the target temporarily
+						while (line != null) {
+							if (!line.contains(extras[1])) {
+								result += line + "\n";
+							}
+							line = reader.readLine();
+						}
+						reader.close();
+
+						PrintWriter pw = new PrintWriter(new FileWriter(
+								dir.getPath() + "/tles.txt", false));
+
+						// store the TLEs
+						pw.println(result);
+						result = downloader.downloadTLE(extras[1]);
+						pw.println(result);
+						pw.close();
 
 						Intent localIntent = new Intent(
 								Constants.BROADCAST_ACTION)
@@ -171,14 +174,6 @@ public class TLEPullService extends IntentService {
 						// Broadcasts the Intent to receivers in this app.
 						LocalBroadcastManager.getInstance(this).sendBroadcast(
 								localIntent);
-
-						// store the TLEs
-						PrintWriter pw = new PrintWriter(new FileWriter(
-								dir.getPath() + "tles.txt", true));
-
-						pw.println(result);
-						pw.close();
-						// print the other TLEs back
 					}
 
 				} else {
