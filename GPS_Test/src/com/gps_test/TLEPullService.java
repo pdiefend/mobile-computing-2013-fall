@@ -175,7 +175,41 @@ public class TLEPullService extends IntentService {
 						LocalBroadcastManager.getInstance(this).sendBroadcast(
 								localIntent);
 					}
+				} else if (extras[0].contains("list")) {
+					// check if we have the TLE in local storage
+					File dir = getExternalFilesDir(null);
+					String[] list = dir.list();
 
+					if (Arrays.asList(list).indexOf("tles.txt") < 0) {
+						Log.e(TAG, "TLE File not found.");
+					} else {
+						// file found
+						Log.i(TAG, "TLE File found.");
+
+						// search for the TLE names
+						BufferedReader reader = new BufferedReader(
+								new FileReader(dir.getPath() + "/tles.txt"));
+						String line = reader.readLine();
+						result = "";
+
+						// store the TLEs that are not the target temporarily
+						while (line != null) {
+							if (line.length() > 3 && line.length() < 7) {
+								result += line + "\n";
+							}
+							line = reader.readLine();
+						}
+						reader.close();
+
+						Intent localIntent = new Intent(
+								Constants.BROADCAST_ACTION)
+						// Puts the status into the Intent
+								.putExtra(Constants.EXTENDED_DATA_STATUS,
+										result);
+						// Broadcasts the Intent to receivers in this app.
+						LocalBroadcastManager.getInstance(this).sendBroadcast(
+								localIntent);
+					}
 				} else {
 					Log.e(TAG, "Unknown Command");
 				}

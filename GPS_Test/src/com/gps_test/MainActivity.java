@@ -37,21 +37,19 @@ public class MainActivity extends Activity {
 
 		Log.i(TAG, "Created");
 
-		String[] extras = new String[2];
-		extras[0] = "update";
-		extras[1] = "25544";
+		// hardcoded test functionality
+		String[] extras = { "list", "" };
+
+		// extras[0] = "list"; extras[1] = ""; // to list available TLEs
+		// extras[0] = "get"; extras[1] = "xxxxx"; // to get TLE by sat num
+		// extras[0] = "update"; extras[1] = "xxxxx"; // to force download of
+		// TLE by sat num
+
 		Intent mServiceIntent = new Intent(this, TLEPullService.class);
 		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
-		// mServiceIntent.setData(Uri.parse("25544")); // hardcoded get ISS
 		this.startService(mServiceIntent);
 		Log.i(TAG, "Download Service Started");
 		// Response will come in the broadcast receiver below
-
-		// mServiceIntent = new Intent(this, TLEPullService.class);
-		// mServiceIntent.setData(Uri.parse("37820")); // hardcoded get Tiangong
-		// 1
-		// this.startService(mServiceIntent);
-		// Log.i(TAG, "Download Service Started");
 
 		// Register the listener with the Location Manager to receive location
 		// updates
@@ -79,6 +77,13 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * Computes the pointing vector from the user's current location. Takes
+	 * virtually no time to execute
+	 * 
+	 * @param v
+	 *            current view. Not used except for button
+	 */
 	public void compute(View v) {
 		Log.i(TAG, "Compute pressed");
 
