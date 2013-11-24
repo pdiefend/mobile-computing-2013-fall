@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private final boolean GPS_DEBUG = false;
 
 	// Download
-	private String TLE;
+	private String TLE = "";
 	private String satList;
 
 	// Compass
@@ -715,7 +715,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			double cam_el = rl + 90;
 
 			// myCompass.update(matrixValues[0]);
-			if (TLE.length() < 50) {
+			if (TLE.length() > 50) {
 				SGP_TLE tle = new SGP_TLE(TLE);
 				SGP_API RSO = new SGP_API(tle, new SGP_Location(
 						"Current Location", latitude, longitude,
