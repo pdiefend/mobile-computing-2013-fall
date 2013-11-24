@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000"
     >
    <LinearLayout 
    android:orientation="horizontal"
@@ -20,14 +21,70 @@
         android:layout_width="0dp"
         android:layout_weight="1" />
   </LinearLayout>
-  <ImageView 
-      android:layout_height="wrap_content" 
-      android:layout_width="wrap_content" 
-      android:visibility="visible"
-      android:id="@+id/imageView1" />
-  <VideoView 
-      android:layout_height="wrap_content" 
-      android:layout_width="wrap_content" 
-      android:visibility="invisible"
-      android:id="@+id/videoView1" />
+  
+  <RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
+
+    <ImageView
+    	android:id="@+id/arrow_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/arrow_up"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/arrow_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+      	android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/arrow_left"
+        android:visibility="visible" />
+    
+    <ImageView
+        android:id="@+id/arrow_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+      	android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/arrow_right"
+        android:visibility="visible" />
+    
+	<ImageView
+        android:id="@+id/arrow_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+      	android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/arrow_down"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/arrow_up"
+        android:layout_above="@id/arrow_down"
+        android:layout_toLeftOf="@id/arrow_right"
+        android:layout_toRightOf="@id/arrow_left"
+        android:visibility="visible" />
+
+    <VideoView
+        android:id="@+id/videoView1"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/arrow_up"
+        android:layout_above="@id/arrow_down"
+        android:layout_toLeftOf="@id/arrow_right"
+        android:layout_toRightOf="@id/arrow_left"
+        android:visibility="invisible" />
+      
+  </RelativeLayout>
+  
+
 </LinearLayout>
