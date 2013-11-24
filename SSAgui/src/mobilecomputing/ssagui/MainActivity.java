@@ -691,6 +691,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 				TLE = temp;
 			else
 				satList = temp;
+
+			/*
+			 * mSatelliteTitles = new ArrayList<String>(80); Scanner scan = new
+			 * Scanner(temp); String line = scan.nextLine(); try { while (line
+			 * != null) { addItems(getCurrentFocus(), line.substring(0,
+			 * line.length() - 5), line.substring(line.length() - 5));
+			 * 
+			 * line = scan.next(); } } catch (NoSuchElementException e) {
+			 * 
+			 * }
+			 */
+
 			Log.i(TAG, temp);
 		}
 	}
