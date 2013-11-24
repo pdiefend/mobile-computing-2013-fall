@@ -12,6 +12,8 @@ import android.widget.EditText;
 
 public class AddSatelliteDialogue extends DialogFragment {
 
+	public final String TAG = "Add Sat Dialog";
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,7 +35,8 @@ public class AddSatelliteDialogue extends DialogFragment {
 				String satellite = satelliteName + " #" + satelliteNumber;
 
 				if (!satellite.equals(" #")) {
-					MainActivity.addItems(getView(), satellite);
+					((MainActivity) getActivity()).addItems(getView(),
+							satelliteName, satelliteNumber);
 				} else {
 					Log.w("Add Satellite", "aborted");
 				}
