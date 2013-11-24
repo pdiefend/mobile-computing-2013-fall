@@ -17,6 +17,7 @@ import com.sgp.SGP_TLE_Download;
 
 public class TLEPullService extends IntentService {
 	public final static String EXTRAS = "com.gps_test.EXTRAS";
+	public final boolean TLE_DEBUG = false;
 	private String TAG = "TLE Pull Service";
 	SGP_TLE_Download downloader;
 	private String result;
@@ -24,13 +25,15 @@ public class TLEPullService extends IntentService {
 	public TLEPullService() {
 		super("TLEPullService");
 		this.downloader = new SGP_TLE_Download();
-		Log.i(TAG, "Created");
+		if (TLE_DEBUG)
+			Log.i(TAG, "Created");
 	}
 
 	@Override
 	protected void onHandleIntent(Intent workIntent) {
 		try {
-			Log.i(TAG, "Received Intent");
+			if (TLE_DEBUG)
+				Log.i(TAG, "Received Intent");
 			// Gets data from the incoming Intent
 			// String dataString = workIntent.getDataString();
 			String[] extras = workIntent
@@ -44,7 +47,8 @@ public class TLEPullService extends IntentService {
 					String[] list = dir.list();
 
 					if (Arrays.asList(list).indexOf("tles.txt") < 0) {
-						Log.i(TAG, "TLE File not found. Creating it now.");
+						if (TLE_DEBUG)
+							Log.i(TAG, "TLE File not found. Creating it now.");
 						// File not found, create it and download the TLE
 
 						// Download the TLE
@@ -73,7 +77,8 @@ public class TLEPullService extends IntentService {
 						pw.close();
 					} else {
 						// file found
-						Log.i(TAG, "TLE File found.");
+						if (TLE_DEBUG)
+							Log.i(TAG, "TLE File found.");
 
 						// search for the TLE
 						BufferedReader reader = new BufferedReader(
@@ -120,7 +125,8 @@ public class TLEPullService extends IntentService {
 					String[] list = dir.list();
 
 					if (Arrays.asList(list).indexOf("tles.txt") < 0) {
-						Log.i(TAG, "TLE File not found. Creating it now.");
+						if (TLE_DEBUG)
+							Log.i(TAG, "TLE File not found. Creating it now.");
 						// File not found, create it and download the TLE
 
 						// Download the TLE
@@ -149,7 +155,8 @@ public class TLEPullService extends IntentService {
 						pw.close();
 					} else {
 						// file found
-						Log.i(TAG, "TLE File found.");
+						if (TLE_DEBUG)
+							Log.i(TAG, "TLE File found.");
 
 						// search for the TLE
 						BufferedReader reader = new BufferedReader(
@@ -193,10 +200,12 @@ public class TLEPullService extends IntentService {
 					String[] list = dir.list();
 
 					if (Arrays.asList(list).indexOf("tles.txt") < 0) {
-						Log.e(TAG, "TLE File not found.");
+						if (TLE_DEBUG)
+							Log.e(TAG, "TLE File not found.");
 					} else {
 						// file found
-						Log.i(TAG, "TLE File found.");
+						if (TLE_DEBUG)
+							Log.i(TAG, "TLE File found.");
 
 						// search for the TLE names
 						BufferedReader reader = new BufferedReader(
@@ -207,7 +216,7 @@ public class TLEPullService extends IntentService {
 						// store the TLEs that are not the target temporarily
 						while (line != null) {
 							if (line.length() > 3 && line.length() < 7) {
-								result += line + "\n";
+								result += line + " ";
 							}
 							line = reader.readLine();
 						}
@@ -223,18 +232,23 @@ public class TLEPullService extends IntentService {
 								localIntent);
 					}
 				} else {
-					Log.e(TAG, "Unknown Command");
+					if (TLE_DEBUG)
+						Log.e(TAG, "Unknown Command");
 				}
 
 			} else if (extras.length != 2) {
-				Log.e(TAG, "Not Enough Parameters");
+				if (TLE_DEBUG)
+					Log.e(TAG, "Not Enough Parameters");
 			} else if (!this.isExternalStorageWritable()) {
-				Log.e(TAG, "Not Enough Parameters");
+				if (TLE_DEBUG)
+					Log.e(TAG, "Not Enough Parameters");
 			} else {
-				Log.e(TAG, "Jim, he's dead");
+				if (TLE_DEBUG)
+					Log.e(TAG, "Jim, he's dead");
 			}
 		} catch (Exception e) {
-			Log.e(TAG, e.toString());
+			if (TLE_DEBUG)
+				Log.e(TAG, e.toString());
 		}
 	}
 

@@ -22,6 +22,10 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -49,16 +53,39 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.sgp.SGP_API;
+import com.sgp.SGP_Location;
+import com.sgp.SGP_TLE;
+
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener {
 	private final static String TAG = "MainActivity";
+
+	// GPS
 	private String locationProvider = LocationManager.NETWORK_PROVIDER;
 	// private String locationProvider = LocationManager.GPS_PROVIDER;
-
 	private double latitude;
 	private double longitude;
 	private double altitude;
+	private final boolean GPS_DEBUG = false;
+
+	// Download
 	private String TLE;
+	private String satList;
+
+	// Compass
+	SensorManager sensorManager;
+	private Sensor sensorAccelerometer;
+	private Sensor sensorMagneticField;
+	private float[] valuesAccelerometer;
+	private float[] valuesMagneticField;
+	private float[] matrixR;
+	private float[] matrixI;
+	private float[] matrixValues;
+	// private double az, pt, rl;
+	private final boolean COMPASS_DEBUG = false;
+	private final boolean COMPUTE_DEBUG = false;
+	private int dir = 0;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -66,6 +93,8 @@ public class MainActivity extends Activity {
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
+
+	// private int selectedIndex;
 	private static ArrayList<String> mSatelliteTitles;
 
 	static ArrayAdapter<String> adapter;
@@ -135,6 +164,19 @@ public class MainActivity extends Activity {
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mDownloadStateReceiver, mStatusIntentFilter);
 
+		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+		sensorAccelerometer = sensorManager
+				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		sensorMagneticField = sensorManager
+				.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+		valuesAccelerometer = new float[3];
+		valuesMagneticField = new float[3];
+
+		matrixR = new float[9];
+		matrixI = new float[9];
+		matrixValues = new float[3];
+
 	}
 
 	@Override
@@ -142,6 +184,20 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	public void onPause() {
+		sensorManager.unregisterListener(this, sensorAccelerometer);
+		sensorManager.unregisterListener(this, sensorMagneticField);
+		super.onPause();
+	}
+
+	public void onResume() {
+		sensorManager.registerListener(this, sensorAccelerometer,
+				SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(this, sensorMagneticField,
+				SensorManager.SENSOR_DELAY_NORMAL);
+		super.onResume();
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
@@ -222,6 +278,17 @@ public class MainActivity extends Activity {
 		mDrawerList.setItemChecked(position, true);
 		setTitle(mSatelliteTitles.get(position));
 		mDrawerLayout.closeDrawer(mDrawerList);
+
+		String satNum = mSatelliteTitles.get(position);
+		String satName = satNum.substring(0, satNum.length() - 6);
+		satNum = satNum.substring(satNum.length() - 5);
+
+		String[] extras = { "get", satNum, satName };
+
+		Intent mServiceIntent = new Intent(this, TLEPullService.class);
+		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
+		this.startService(mServiceIntent);
+		Log.i(TAG, "Download Service Started");
 	}
 
 	@Override
@@ -557,11 +624,6 @@ public class MainActivity extends Activity {
 
 		String[] extras = { "update", satelliteNum, satelliteName };
 
-		// extras[0] = "list"; extras[1] = ""; // to list available TLEs
-		// extras[0] = "get"; extras[1] = "xxxxx"; // to get TLE by sat num
-		// extras[0] = "update"; extras[1] = "xxxxx"; // to force download of
-		// TLE by sat num
-
 		Intent mServiceIntent = new Intent(this, TLEPullService.class);
 		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
 		this.startService(mServiceIntent);
@@ -576,9 +638,11 @@ public class MainActivity extends Activity {
 
 			// Called when a new location is found by the network location
 			// provider.
-			Log.i(TAG, "latitude: " + location.getLatitude());
-			Log.i(TAG, "longitude: " + location.getLongitude());
-			Log.i(TAG, "altitude: " + location.getAltitude());
+			if (GPS_DEBUG) {
+				Log.i(TAG, "latitude: " + location.getLatitude());
+				Log.i(TAG, "longitude: " + location.getLongitude());
+				Log.i(TAG, "altitude: " + location.getAltitude());
+			}
 
 			latitude = location.getLatitude();
 			longitude = location.getLongitude();
@@ -608,9 +672,100 @@ public class MainActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 
 			Bundle extras = intent.getExtras();
-			TLE = extras.getString(Constants.EXTENDED_DATA_STATUS);
-			Log.i(TAG, TLE);
+			String temp = extras.getString(Constants.EXTENDED_DATA_STATUS);
+			if (temp.contains("\n"))
+				TLE = temp;
+			else
+				satList = temp;
+			Log.i(TAG, temp);
 		}
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		switch (event.sensor.getType()) {
+		case Sensor.TYPE_ACCELEROMETER:
+			for (int i = 0; i < 3; i++) {
+				valuesAccelerometer[i] = event.values[i];
+			}
+			break;
+		case Sensor.TYPE_MAGNETIC_FIELD:
+			for (int i = 0; i < 3; i++) {
+				valuesMagneticField[i] = event.values[i];
+			}
+			break;
+		}
+
+		boolean success = SensorManager.getRotationMatrix(matrixR, matrixI,
+				valuesAccelerometer, valuesMagneticField);
+
+		if (success) {
+			SensorManager.getOrientation(matrixR, matrixValues);
+
+			double az = Math.toDegrees(matrixValues[0]);
+			double pt = Math.toDegrees(matrixValues[1]);
+			double rl = Math.toDegrees(matrixValues[2]);
+			if (COMPASS_DEBUG) {
+				Log.i(TAG, "azimuth: " + az);
+				Log.i(TAG, "pitch: " + pt);
+				Log.i(TAG, "roll: " + rl);
+			}
+
+			double cam_az = (az >= 0) ? az : (360 + az);
+			double cam_el = rl + 90;
+
+			// myCompass.update(matrixValues[0]);
+			if (TLE.length() < 50) {
+				SGP_TLE tle = new SGP_TLE(TLE);
+				SGP_API RSO = new SGP_API(tle, new SGP_Location(
+						"Current Location", latitude, longitude,
+						(int) altitude, -5));
+				RSO.calculatePosition();
+				if (COMPUTE_DEBUG) {
+					Log.i("GPS_Thread", "azimuth: " + RSO.getAzimuth());
+					Log.i("GPS_Thread", "elevation: " + RSO.getElevation());
+					Log.i("GPS_Thread", "visible: " + RSO.isVisible());
+				}
+
+				if (!RSO.isVisible()) {
+					// display error if not visible
+					Toast.makeText(this, "RSO Not Visible", Toast.LENGTH_SHORT)
+							.show();
+				}
+
+				// compute differences
+				int temp_dir = 0;
+				// Elevation
+				if (RSO.getElevation() > (cam_el + 2)) {
+					temp_dir += 1;
+				} else if (RSO.getElevation() < (cam_el - 2)) {
+					temp_dir += 4;
+				}
+
+				double rAz = RSO.getAzimuth();
+				// Azimuth
+				if (Math.abs(rAz - cam_az) < 180) {
+					if (rAz > (cam_az + 2)) {
+						temp_dir += 2;
+					} else if (rAz < (cam_az - 2)) {
+						temp_dir += 8;
+					}
+				} else {
+					if (rAz > cam_az) {
+						temp_dir += 8;
+					} else if (rAz < cam_az) {
+						temp_dir += 2;
+					}
+				}
+				dir = temp_dir;
+			}
+		}
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor arg0, int arg1) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
