@@ -64,9 +64,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 	// GPS
 	private String locationProvider = LocationManager.NETWORK_PROVIDER;
 	// private String locationProvider = LocationManager.GPS_PROVIDER;
-	private double latitude;
-	private double longitude;
-	private double altitude;
+	public double latitude;
+	public double longitude;
+	public double altitude;
 	private final boolean GPS_DEBUG = false;
 
 	// Download
@@ -86,6 +86,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private final boolean COMPASS_DEBUG = false;
 	private final boolean COMPUTE_DEBUG = false;
 	private int dir = 0;
+	public double cam_az;
+	public double cam_el;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -419,6 +421,18 @@ public class MainActivity extends Activity implements SensorEventListener {
 			File albumF = getAlbumDir();
 			File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX,
 					albumF);
+
+			String args = imageFileName + ","
+					+ ((MainActivity) getActivity()).latitude + ","
+					+ ((MainActivity) getActivity()).longitude + ","
+					+ ((MainActivity) getActivity()).altitude + ","
+					+ ((MainActivity) getActivity()).cam_az + ","
+					+ ((MainActivity) getActivity()).cam_el + ",";
+			Intent ir = new Intent(((MainActivity) getActivity()),
+					StoreMetaDataService.class);
+			ir.putExtra("data", args);
+			((MainActivity) getActivity()).startService(ir);
+
 			return imageF;
 		}
 
@@ -711,8 +725,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 				Log.i(TAG, "roll: " + rl);
 			}
 
-			double cam_az = (az >= 0) ? az : (360 + az);
-			double cam_el = rl + 90;
+			cam_az = (az >= 0) ? az : (360 + az);
+			cam_el = rl + 90;
 
 			// myCompass.update(matrixValues[0]);
 			if (TLE.length() > 50) {

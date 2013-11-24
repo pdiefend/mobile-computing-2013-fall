@@ -28,6 +28,8 @@
         </activity>
         <service android:name="mobilecomputing.ssagui.TLEPullService"
             android:exported="false"/>
+        <service android:name="mobilecomputing.ssagui.StoreMetaDataService"
+            android:exported="false"/>
     </application>
 
 </manifest>
