@@ -17,7 +17,7 @@ import com.sgp.SGP_TLE_Download;
 
 public class TLEPullService extends IntentService {
 	public final static String EXTRAS = "com.gps_test.EXTRAS";
-	public final boolean TLE_DEBUG = false;
+	public final boolean TLE_DEBUG = true;
 	private String TAG = "TLE Pull Service";
 	SGP_TLE_Download downloader;
 	private String result;
@@ -89,7 +89,7 @@ public class TLEPullService extends IntentService {
 
 						while (line != null) {
 							if (line.contains(extras[1])) {
-								result += line;
+								result += line + "\n";
 								found = true;
 							}
 							line = reader.readLine();
@@ -179,6 +179,9 @@ public class TLEPullService extends IntentService {
 						// store the TLEs
 						pw.println(result);
 						result = downloader.downloadTLE(extras[1]);
+						if (TLE_DEBUG) {
+							Log.i(TAG, result);
+						}
 						if (extras.length == 3) {
 							result = "(" + extras[2] + ") " + result;
 						}
@@ -213,10 +216,9 @@ public class TLEPullService extends IntentService {
 						String line = reader.readLine();
 						result = "";
 
-						// store the TLEs that are not the target temporarily
 						while (line != null) {
-							if (line.length() > 3 && line.length() < 7) {
-								result += line + " ";
+							if (line.length() > 3 && line.length() < 50) {
+								result += line + ",";
 							}
 							line = reader.readLine();
 						}

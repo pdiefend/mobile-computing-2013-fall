@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -108,7 +110,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		mTitle = mDrawerTitle = getTitle();
 		mSatelliteTitles = new ArrayList<String>(80);
-		mSatelliteTitles.add("ISS #25544");
+		mSatelliteTitles.add("ISS 25544");
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -179,6 +181,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 		matrixI = new float[9];
 		matrixValues = new float[3];
 
+		String[] extras = { "list", "", "" };
+
+		Intent mServiceIntent = new Intent(this, TLEPullService.class);
+		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
+		this.startService(mServiceIntent);
+		Log.i(TAG, "Requesting List Service Started");
 	}
 
 	@Override
@@ -261,6 +269,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			selectItem(position);
+			displayedAlready = false;
 		};
 	}
 
@@ -286,7 +295,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		satNum = satNum.substring(satNum.length() - 5);
 
 		String[] extras = { "get", satNum, satName };
-
 		Intent mServiceIntent = new Intent(this, TLEPullService.class);
 		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
 		this.startService(mServiceIntent);
@@ -631,17 +639,22 @@ public class MainActivity extends Activity implements SensorEventListener {
 		sendBroadcast(mediaScanIntent);
 	}
 
-	public void addItems(View v, String satelliteName, String satelliteNum) {
-		String satellite = satelliteName + " #" + satelliteNum;
+	public void addItems(View v, String satelliteName, String satelliteNum,
+			boolean update) {
+		String satellite = satelliteName + " " + satelliteNum;
 		mSatelliteTitles.add(satellite);
+		adapter.clear();
+		adapter.addAll(mSatelliteTitles);
 		adapter.notifyDataSetChanged();
 
-		String[] extras = { "update", satelliteNum, satelliteName };
-
-		Intent mServiceIntent = new Intent(this, TLEPullService.class);
-		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
-		this.startService(mServiceIntent);
-		Log.i(TAG, "Download Service Started");
+		// forces an update
+		if (update) {
+			String[] extras = { "update", satelliteNum, satelliteName };
+			Intent mServiceIntent = new Intent(this, TLEPullService.class);
+			mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
+			this.startService(mServiceIntent);
+			Log.i(TAG, "Download Service Started");
+		}
 	}
 
 	// Acquire a reference to the system Location Manager
@@ -673,6 +686,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		}
 	};
 
+	private boolean displayedAlready;
+
 	// Broadcast receiver for receiving status updates from the
 	// IntentService
 	private class TLEResponseReceiver extends BroadcastReceiver {
@@ -687,23 +702,30 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 			Bundle extras = intent.getExtras();
 			String temp = extras.getString(Constants.EXTENDED_DATA_STATUS);
-			if (temp.contains("\n"))
+			if (!temp.contains(","))
 				TLE = temp;
-			else
-				satList = temp;
+			else {
+				// satList = temp;
+				Log.i(TAG, temp);
+				mSatelliteTitles = new ArrayList<String>(80);
+				Scanner scan = new Scanner(temp);
+				scan.useDelimiter(",");
+				String line = scan.next();
+				try {
+					while (line != null) {
+						String name = line.substring(0, line.length() - 6);
+						String num = line.substring(line.length() - 6);
+						addItems(getCurrentFocus(), name, num, false);
 
-			/*
-			 * mSatelliteTitles = new ArrayList<String>(80); Scanner scan = new
-			 * Scanner(temp); String line = scan.nextLine(); try { while (line
-			 * != null) { addItems(getCurrentFocus(), line.substring(0,
-			 * line.length() - 5), line.substring(line.length() - 5));
-			 * 
-			 * line = scan.next(); } } catch (NoSuchElementException e) {
-			 * 
-			 * }
-			 */
+						line = scan.next();
+					}
+				} catch (NoSuchElementException e) {
 
-			Log.i(TAG, temp);
+				}
+
+			}
+
+			// Log.i(TAG, temp);
 		}
 	}
 
@@ -741,22 +763,25 @@ public class MainActivity extends Activity implements SensorEventListener {
 			cam_el = rl + 90;
 
 			// myCompass.update(matrixValues[0]);
-			if (TLE.length() > 50) {
+			if (TLE.length() > 100) {
 				SGP_TLE tle = new SGP_TLE(TLE);
 				SGP_API RSO = new SGP_API(tle, new SGP_Location(
 						"Current Location", latitude, longitude,
 						(int) altitude, -5));
 				RSO.calculatePosition();
-				if (COMPUTE_DEBUG) {
-					Log.i("GPS_Thread", "azimuth: " + RSO.getAzimuth());
-					Log.i("GPS_Thread", "elevation: " + RSO.getElevation());
-					Log.i("GPS_Thread", "visible: " + RSO.isVisible());
+				if (COMPUTE_DEBUG)
+
+				{
+					Log.i("RSO", "azimuth: " + RSO.getAzimuth());
+					Log.i("RSO", "elevation: " + RSO.getElevation());
+					Log.i("RSO", "visible: " + RSO.isVisible());
 				}
 
-				if (!RSO.isVisible()) {
+				if (!RSO.isVisible() && !displayedAlready) {
 					// display error if not visible
 					Toast.makeText(this, "RSO Not Visible", Toast.LENGTH_SHORT)
 							.show();
+					displayedAlready = true;
 				}
 
 				// compute differences

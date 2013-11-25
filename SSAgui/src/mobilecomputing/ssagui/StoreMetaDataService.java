@@ -29,9 +29,9 @@ public class StoreMetaDataService extends IntentService {
 				String[] list = dir.list();
 
 				PrintWriter pw = new PrintWriter(new FileWriter(dir.getPath()
-						+ "/data.txt", true));
+						+ "/data.csv", true));
 
-				if (Arrays.asList(list).indexOf("data.txt") < 0) {
+				if (Arrays.asList(list).indexOf("data.csv") < 0) {
 					if (STORE_DEBUG)
 						Log.i(TAG, "MetaData File not found. Creating it now.");
 					pw.println("image,latitude,longitude,altitude,azimuth,elevation");

@@ -31,12 +31,12 @@ public class AddSatelliteDialogue extends DialogFragment {
 				EditText edit2 = (EditText) dialog2
 						.findViewById(R.id.addSatelliteNumber);
 				String satelliteName = edit.getText().toString();
-				String satelliteNumber = edit2.getText().toString();
+				String satelliteNumber = "(" + edit2.getText().toString() + ")";
 				String satellite = satelliteName + " #" + satelliteNumber;
 
 				if (!satellite.equals(" #")) {
 					((MainActivity) getActivity()).addItems(getView(),
-							satelliteName, satelliteNumber);
+							satelliteName, satelliteNumber, true);
 				} else {
 					Log.w("Add Satellite", "aborted");
 				}
