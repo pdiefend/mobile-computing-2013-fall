@@ -685,10 +685,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 	public void addItems(View v, String satelliteName, String satelliteNum,
 			boolean update) {
 		String satellite = satelliteName + " " + satelliteNum;
-		mSatelliteTitles.add(satellite);
-		adapter.clear();
-		adapter.addAll(mSatelliteTitles);
-		adapter.notifyDataSetChanged();
+
+		// only change view if a new satellite is being added
+		if (!mSatelliteTitles.contains(satellite)) {
+			mSatelliteTitles.add(satellite);
+			adapter.clear();
+			adapter.addAll(mSatelliteTitles);
+			adapter.notifyDataSetChanged();
+		}
 
 		// forces an update
 		if (update) {
