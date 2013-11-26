@@ -58,7 +58,7 @@ public class TLEPullService extends IntentService {
 						 * BROADCAST_ACTION is a custom Intent action
 						 */
 						if (extras.length == 3) {
-							result = "(" + extras[2] + ") " + result;
+							result = extras[2] + " " + result;
 						}
 						Intent localIntent = new Intent(
 								Constants.BROADCAST_ACTION)
@@ -99,7 +99,7 @@ public class TLEPullService extends IntentService {
 						if (!found) {
 							result = downloader.downloadTLE(extras[1]);
 							if (extras.length == 3) {
-								result = "(" + extras[2] + ") " + result;
+								result = extras[2] + " " + result;
 							}
 							// store the TLEs
 							PrintWriter pw = new PrintWriter(new FileWriter(
@@ -132,7 +132,7 @@ public class TLEPullService extends IntentService {
 						// Download the TLE
 						result = downloader.downloadTLE(extras[1]);
 						if (extras.length == 3) {
-							result = "(" + extras[2] + ") " + result;
+							result = "" + extras[2] + " " + result;
 						}
 						/*
 						 * Creates a new Intent containing a Uri object
