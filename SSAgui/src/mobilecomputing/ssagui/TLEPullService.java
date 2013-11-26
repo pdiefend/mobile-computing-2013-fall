@@ -183,7 +183,7 @@ public class TLEPullService extends IntentService {
 							Log.i(TAG, result);
 						}
 						if (extras.length == 3) {
-							result = "(" + extras[2] + ") " + result;
+							result = extras[2] +" "+ result;
 						}
 						pw.println(result);
 						pw.close();

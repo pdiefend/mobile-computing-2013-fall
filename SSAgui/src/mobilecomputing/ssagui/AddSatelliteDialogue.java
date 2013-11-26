@@ -30,8 +30,8 @@ public class AddSatelliteDialogue extends DialogFragment {
 						.findViewById(R.id.addSatelliteName);
 				EditText edit2 = (EditText) dialog2
 						.findViewById(R.id.addSatelliteNumber);
-				String satelliteName = edit.getText().toString();
-				String satelliteNumber = "(" + edit2.getText().toString() + ")";
+				String satelliteName = "(" + edit.getText().toString() + ")";
+				String satelliteNumber = edit2.getText().toString();
 				String satellite = satelliteName + " #" + satelliteNumber;
 
 				if (!satellite.equals(" #")) {

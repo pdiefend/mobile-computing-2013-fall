@@ -757,7 +757,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				try {
 					while (line != null) {
 						String name = line.substring(0, line.length() - 6);
-						String num = line.substring(line.length() - 6);
+						String num = line.substring(line.length() - 5);
 						addItems(getCurrentFocus(), name, num, false);
 
 						line = scan.next();
