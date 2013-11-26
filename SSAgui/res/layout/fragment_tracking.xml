@@ -66,13 +66,13 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_below="@id/arrow_up"
         android:layout_above="@id/arrow_down"
         android:layout_toLeftOf="@id/arrow_right"
         android:layout_toRightOf="@id/arrow_left"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <VideoView
         android:id="@+id/videoView1"
@@ -82,6 +82,17 @@
         android:layout_above="@id/arrow_down"
         android:layout_toLeftOf="@id/arrow_right"
         android:layout_toRightOf="@id/arrow_left"
+        android:visibility="invisible" />
+    
+    <ImageView
+        android:id="@+id/action_ready"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/arrow_down"
+        android:layout_below="@id/arrow_up"
+        android:layout_toLeftOf="@id/arrow_right"
+        android:layout_toRightOf="@id/arrow_left"
+        android:src="@drawable/ready"
         android:visibility="invisible" />
       
   </RelativeLayout>

@@ -348,6 +348,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 			mImageBitmap = null;
 			mVideoUri = null;
 
+			// Initiate arrow image
+			mArrowUp = (ImageView) rootView.findViewById(R.id.arrow_up);
+			mArrowDown = (ImageView) rootView.findViewById(R.id.arrow_down);
+			mArrowLeft = (ImageView) rootView.findViewById(R.id.arrow_left);
+			mArrowRight = (ImageView) rootView.findViewById(R.id.arrow_right);
+			mReady = (ImageView) rootView.findViewById(R.id.action_ready);
+
 			Button picBtn = (Button) rootView.findViewById(R.id.btnIntend);
 			setBtnListenerOrDisable(picBtn, mTakePicOnClickListener,
 					MediaStore.ACTION_IMAGE_CAPTURE);
@@ -368,7 +375,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 			return rootView;
 		}
 
-		//
+		// Direction Arrows
+		private ImageView mArrowUp;
+		private ImageView mArrowDown;
+		private ImageView mArrowLeft;
+		private ImageView mArrowRight;
+		private ImageView mReady;
+
 		private static final int ACTION_TAKE_PHOTO_B = 1;
 		private static final int ACTION_TAKE_PHOTO_S = 2;
 		private static final int ACTION_TAKE_VIDEO = 3;
@@ -628,6 +641,36 @@ public class MainActivity extends Activity implements SensorEventListener {
 			}
 		}
 
+		// Set arrow in the images
+		public void setArrows(int dir) {
+			Log.i(TAG, Integer.toBinaryString(dir));
+			if (isBitSet(dir, 0))
+				mArrowUp.setVisibility(View.VISIBLE);
+			else
+				mArrowUp.setVisibility(View.INVISIBLE);
+			if (isBitSet(dir, 1))
+				mArrowRight.setVisibility(View.VISIBLE);
+			else
+				mArrowRight.setVisibility(View.INVISIBLE);
+			if (isBitSet(dir, 2))
+				mArrowDown.setVisibility(View.VISIBLE);
+			else
+				mArrowDown.setVisibility(View.INVISIBLE);
+			if (isBitSet(dir, 3))
+				mArrowLeft.setVisibility(View.VISIBLE);
+			else
+				mArrowLeft.setVisibility(View.INVISIBLE);
+			if (dir == 0)
+				mReady.setVisibility(View.VISIBLE);
+			else
+				mReady.setVisibility(View.INVISIBLE);
+		}
+
+		public boolean isBitSet(int data, int position) {
+			int temp = (data >> position) & 1;
+			return temp == 1;
+		}
+
 	}
 
 	public void galleryAddPic(String photoPath) {
@@ -787,28 +830,32 @@ public class MainActivity extends Activity implements SensorEventListener {
 				// compute differences
 				int temp_dir = 0;
 				// Elevation
-				if (RSO.getElevation() > (cam_el + 2)) {
-					temp_dir += 1;
-				} else if (RSO.getElevation() < (cam_el - 2)) {
+				if (RSO.getElevation() > (cam_el + 5)) {
 					temp_dir += 4;
+				} else if (RSO.getElevation() < (cam_el - 5)) {
+					temp_dir += 1;
 				}
 
 				double rAz = RSO.getAzimuth();
 				// Azimuth
 				if (Math.abs(rAz - cam_az) < 180) {
-					if (rAz > (cam_az + 2)) {
+					if (rAz > (cam_az + 5)) {
 						temp_dir += 2;
-					} else if (rAz < (cam_az - 2)) {
+					} else if (rAz < (cam_az - 5)) {
 						temp_dir += 8;
 					}
 				} else {
-					if (rAz > cam_az) {
+					if (rAz > cam_az + 5) {
 						temp_dir += 8;
-					} else if (rAz < cam_az) {
+					} else if (rAz < cam_az - 5) {
 						temp_dir += 2;
 					}
 				}
 				dir = temp_dir;
+				TrackingFragment fragment = (TrackingFragment) getFragmentManager()
+						.findFragmentById(R.id.content_frame);
+				if (fragment != null)
+					fragment.setArrows(dir);
 			}
 		}
 	}
