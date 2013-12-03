@@ -183,7 +183,7 @@ public class TLEPullService extends IntentService {
 							Log.i(TAG, result);
 						}
 						if (extras.length == 3) {
-							result = extras[2] +" "+ result;
+							result = extras[2] + " " + result;
 						}
 						pw.println(result);
 						pw.close();
@@ -238,12 +238,12 @@ public class TLEPullService extends IntentService {
 						Log.e(TAG, "Unknown Command");
 				}
 
-			} else if (extras.length != 2) {
-				if (TLE_DEBUG)
-					Log.e(TAG, "Not Enough Parameters");
+				// } else if (extras.length != 2) {
+				// if (TLE_DEBUG)
+				// Log.e(TAG, "Not Enough Parameters");
 			} else if (!this.isExternalStorageWritable()) {
 				if (TLE_DEBUG)
-					Log.e(TAG, "Not Enough Parameters");
+					Log.e(TAG, "Storage Not Writable");
 			} else {
 				if (TLE_DEBUG)
 					Log.e(TAG, "Jim, he's dead");

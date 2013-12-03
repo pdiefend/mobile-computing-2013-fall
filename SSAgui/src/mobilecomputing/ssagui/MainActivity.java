@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -59,9 +60,12 @@ import com.sgp.SGP_API;
 import com.sgp.SGP_Location;
 import com.sgp.SGP_TLE;
 
+@SuppressLint("SimpleDateFormat")
+@SuppressWarnings("unused")
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MainActivity extends Activity implements SensorEventListener {
 	private final static String TAG = "MainActivity";
+	private final static String GALAXY_CAMERA = "EK-GC100";
 
 	// GPS
 	private String locationProvider = LocationManager.NETWORK_PROVIDER;
@@ -73,7 +77,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	// Download
 	private String TLE = "";
-	private String satList;
 
 	// Compass
 	SensorManager sensorManager;
@@ -97,6 +100,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
+
+	private boolean isGalaxyCam;
 
 	// private int selectedIndex;
 	private static ArrayList<String> mSatelliteTitles;
@@ -187,6 +192,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mServiceIntent.putExtra(TLEPullService.EXTRAS, extras);
 		this.startService(mServiceIntent);
 		Log.i(TAG, "Requesting List Service Started");
+
+		// prd
+		Log.i(TAG, "Checking Device Model");
+		Log.i(TAG, Build.MODEL);
+		if (Build.MODEL.contains(GALAXY_CAMERA)) {
+			isGalaxyCam = true;
+		} else {
+			isGalaxyCam = false;
+		}
 	}
 
 	@Override
@@ -530,13 +544,50 @@ public class MainActivity extends Activity implements SensorEventListener {
 			default:
 				break;
 			} // switch
+				// prd
+			if (((MainActivity) getActivity()).isGalaxyCam) {
+				Log.i(TAG, "isGalaxyCam, Taking Picture");
+				startActivityForResult(takePictureIntent, actionCode);
+			} else {
+				Log.i(TAG, "isNotGalaxyCam, Not Taking Picture");
+			}
+			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+					.format(new Date());
 
-			startActivityForResult(takePictureIntent, actionCode);
+			String args = timeStamp + ","
+					+ ((MainActivity) getActivity()).latitude + ","
+					+ ((MainActivity) getActivity()).longitude + ","
+					+ ((MainActivity) getActivity()).altitude + ","
+					+ ((MainActivity) getActivity()).cam_az + ","
+					+ ((MainActivity) getActivity()).cam_el + ",";
+			Intent ir = new Intent(((MainActivity) getActivity()),
+					StoreMetaDataService.class);
+			ir.putExtra("data", args);
+			((MainActivity) getActivity()).startService(ir);
 		}
 
 		private void dispatchTakeVideoIntent() {
 			Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-			startActivityForResult(takeVideoIntent, ACTION_TAKE_VIDEO);
+			// prd
+			if (((MainActivity) getActivity()).isGalaxyCam) {
+				Log.i(TAG, "isGalaxyCam, Taking Picture");
+				startActivityForResult(takeVideoIntent, ACTION_TAKE_VIDEO);
+			} else {
+				Log.i(TAG, "isNotGalaxyCam, Not Taking Picture");
+			}
+			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+					.format(new Date());
+
+			String args = timeStamp + ","
+					+ ((MainActivity) getActivity()).latitude + ","
+					+ ((MainActivity) getActivity()).longitude + ","
+					+ ((MainActivity) getActivity()).altitude + ","
+					+ ((MainActivity) getActivity()).cam_az + ","
+					+ ((MainActivity) getActivity()).cam_el + ",";
+			Intent ir = new Intent(((MainActivity) getActivity()),
+					StoreMetaDataService.class);
+			ir.putExtra("data", args);
+			((MainActivity) getActivity()).startService(ir);
 		}
 
 		private void handleSmallCameraPhoto(Intent intent) {
@@ -643,7 +694,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		// Set arrow in the images
 		public void setArrows(int dir) {
-			Log.i(TAG, Integer.toBinaryString(dir));
+			// Log.i(TAG, Integer.toBinaryString(dir));
 			if (isBitSet(dir, 0))
 				mArrowUp.setVisibility(View.VISIBLE);
 			else
@@ -806,10 +857,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 				Log.i(TAG, "roll: " + rl);
 			}
 
-			cam_az = (az >= 0) ? az : (360 + az);
-			cam_el = rl + 90;
+			if (isGalaxyCam) {
+				cam_az = (az >= 0) ? az : (360 + az);
+				cam_el = rl + 90;
+			} else {
+				cam_az = (az >= 0) ? az : (360 + az);
+				cam_el = Math.abs(rl) - 90;
+			}
 
-			// myCompass.update(matrixValues[0]);
 			if (TLE.length() > 100) {
 				SGP_TLE tle = new SGP_TLE(TLE);
 				SGP_API RSO = new SGP_API(tle, new SGP_Location(
