@@ -17,18 +17,14 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="mobilecomputing.ssagui.SplashScreen"
+            android:name="mobilecomputing.ssagui.MainActivity"
             android:label="@string/app_name" 
             android:screenOrientation="landscape">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="mobilecomputing.ssagui.MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape">
         </activity>
         <service android:name="mobilecomputing.ssagui.TLEPullService"
             android:exported="false"/>
