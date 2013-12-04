@@ -65,7 +65,7 @@ import com.sgp.SGP_TLE;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MainActivity extends Activity implements SensorEventListener {
 	private final static String TAG = "MainActivity";
-	private final static String GALAXY_CAMERA = "EK-GC100";
+	private final static String GALAXY_CAMERA = "SAMSUNG-EK-GC100";
 
 	// GPS
 	private String locationProvider = LocationManager.NETWORK_PROVIDER;
@@ -911,10 +911,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 					}
 				}
 				dir = temp_dir;
+				Log.i(TAG, "dir = " + dir);
 				TrackingFragment fragment = (TrackingFragment) getFragmentManager()
 						.findFragmentById(R.id.content_frame);
 				if (fragment != null)
 					fragment.setArrows(dir);
+				else
+					Log.e(TAG, "fragment is null");
 			}
 		}
 	}
